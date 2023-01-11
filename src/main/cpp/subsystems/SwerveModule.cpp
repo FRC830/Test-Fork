@@ -63,7 +63,8 @@ SwerveModule::SwerveModule(
     // required by the `DutyCycle` ctor.  Nothing here is expected to fail.
     // Note this has no explicit SetInverted() method; flip the turning motor
     // and it's incremental encoder in order to make things work out/line up.
-    m_turningPositionPWM = std::make_unique<AngleSensor>(turningEncoderPort, alignmentOffset);
+    m_turningPositionPWM = std::make_unique<ctre::phoenix::sensors::CANCoder>(turningEncoderPort);
+    encoderAlignmentOffset = alignmentOffset;
 
     // Motor controller configurations are only checked (or saved) in test mode
     // but a minimal amount is set up in these methods.
@@ -170,7 +171,7 @@ bool SwerveModule::GetStatus() const noexcept
 // available power to turn before the drive motors recieve power.
 void SwerveModule::Periodic() noexcept
 {
-    m_turningPositionPWM->Periodic();
+    //m_turningPositionPWM->Periodic();
     m_turningMotor->Periodic();
     m_driveMotor->Periodic();
 
@@ -231,7 +232,7 @@ void SwerveModule::Periodic() noexcept
 
 void SwerveModule::ResetTurning() noexcept
 {
-    const std::optional<units::angle::degree_t> position = m_turningPositionPWM->GetAbsolutePosition();
+    const std::optional<units::angle::degree_t> position = units::degree_t(m_turningPositionPWM->GetAbsolutePosition() + encoderAlignmentOffset);
 
     // If absolute position isn't available, there's no basis for resetting and
     // it's better to just let any old data stand.  This is when manual
@@ -256,7 +257,7 @@ void SwerveModule::ResetDrive() noexcept
 
 units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 {
-    const std::optional<units::angle::degree_t> position = m_turningPositionPWM->GetAbsolutePosition();
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  m_turningPositionPWM->GetAbsolutePosition());
 
     if (position.has_value())
     {
@@ -432,7 +433,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState &referenceState)
     // Optimize the reference state, to avoid spinning further than 90 degrees.
     frc::SwerveModuleState state = referenceState;
 
-    const std::optional<units::angle::degree_t> position = m_turningPositionPWM->GetAbsolutePosition();
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  m_turningPositionPWM->GetAbsolutePosition());
 
     if (position.has_value())
     {
@@ -502,10 +503,10 @@ void SwerveModule::TestInit() noexcept
                 std::make_pair("Number of rows", nt::Value::MakeDouble(2.0))});
 
     // Setup widgets.  XXX add fcn parameters
-    m_turningPositionPWM->ShuffleboardCreate(
-        shuffleboardLayoutTurningPosition,
-        [&]() -> std::pair<units::angle::degree_t, units::angle::degree_t>
-        { return std::make_pair(m_commandedHeading, m_turningMotor->GetPosition()); });
+    // m_turningPositionPWM->ShuffleboardCreate(
+    //     shuffleboardLayoutTurningPosition,
+    //     [&]() -> std::pair<units::angle::degree_t, units::angle::degree_t>
+    //     { return std::make_pair(m_commandedHeading, m_turningMotor->GetPosition()); });
 
     m_turningMotor->ShuffleboardCreate(
         shuffleboardLayoutTurningMotor,
@@ -568,7 +569,8 @@ void SwerveModule::TestPeriodic() noexcept
     }
 
     // [-2048, +2048)
-    std::optional<int> position = m_turningPositionPWM->GetAbsolutePositionWithoutAlignment();
+    //this one should not be adjusted based on the encoderalighnmentoffset
+    std::optional<int> position = (int)(m_turningPositionPWM->GetAbsolutePosition());
 
     // This provides a rough means of zeroing the turning position.
     if (position.has_value())
@@ -582,14 +584,14 @@ void SwerveModule::TestPeriodic() noexcept
                 alignmentOffset = -2048;
             }
 
-            m_turningPositionPWM->SetAlignment(alignmentOffset);
+            encoderAlignmentOffset = alignmentOffset;
             position = 0;
             m_turningPosition = 0.0_deg;
         }
         else
         {
             // Alignment is [-2048, +2048).
-            position = position.value() + m_turningPositionPWM->GetAlignment();
+            position = position.value() + encoderAlignmentOffset;
             if (position > 2047)
             {
                 position = position.value() - 4096;

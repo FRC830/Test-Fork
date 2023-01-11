@@ -242,6 +242,7 @@ private:
   double m_testModeTurningVoltage{0.0};
   double m_testModeDriveVoltage{0.0};
   SwerveModule::GraphSelection m_graphSelection{SwerveModule::GraphSelection::kNone};
+  
 
   // Test Mode (only) data, obtained but not owned.
   frc::ComplexWidget *m_frontLeftTurning{nullptr};
