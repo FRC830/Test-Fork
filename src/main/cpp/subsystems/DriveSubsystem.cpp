@@ -9,6 +9,8 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/SwerveModule.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include <frc/DataLogManager.h>
 #include <frc/shuffleboard/BuiltInWidgets.h>
 #include <frc/shuffleboard/Shuffleboard.h>
@@ -1034,10 +1036,15 @@ void DriveSubsystem::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> &desi
   rearRight.speed *= m_limit;
 
   
-  frontLeft.angle = frontLeft.angle + frc::Rotation2d(45.0_deg);
+  frontLeft.angle = frontLeft.angle + frc::Rotation2d(55.0_deg);
   frontRight.angle = frontRight.angle + frc::Rotation2d(205.0_deg);
   rearLeft.angle = rearLeft.angle + frc::Rotation2d(0.0_deg);
-  rearRight.angle = rearRight.angle + frc::Rotation2d(90.0_deg);
+  rearRight.angle = rearRight.angle + frc::Rotation2d(100.0_deg);
+
+  frc::SmartDashboard::PutNumber("frontLeft.GetTurningPosition()",double(m_frontLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()",double(m_frontRightSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearLeft.GetTurningPosition()",double(m_rearLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()",double(m_rearRightSwerveModule->GetTurningPosition()));
 
   // To avoid brownout, reduce power when wheels are too far out of position.
   const units::angle::degree_t frontLeftTurningError = m_frontLeftSwerveModule->GetTurningPosition() - frontLeft.angle.Degrees() + 45_deg;
