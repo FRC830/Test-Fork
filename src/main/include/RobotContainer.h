@@ -9,12 +9,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/RunCommand.h>
 
-#include "commands/AutonomousCommands.h"
-#include "commands/TestModeCommands.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/FeederSubsystem.h"
-#include "subsystems/Infrastructure.h"
-#include "subsystems/ShooterSubsystem.h"
 
 #include <memory>
 #include <tuple>
@@ -59,26 +54,9 @@ private:
 
   // The robot's subsystems and commands are defined here...
   DriveSubsystem m_driveSubsystem;
-  FeederSubsystem m_feederSubsystem;
-  InfrastructureSubsystem m_infrastructureSubsystem;
-  ShooterSubsystem m_shooterSubsystem;
 
   std::unique_ptr<frc2::RunCommand> m_driveCommand;
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
-
-  std::unique_ptr<OneBallAuto> m_oneBallAuto;
-  std::unique_ptr<TwoBallAuto> m_twoBallAuto;
-
-  std::unique_ptr<ZeroCommand> m_zeroCommand;
-  std::unique_ptr<MaxVAndATurningCommand> m_maxVAndATurningCommand;
-  std::unique_ptr<MaxVAndADriveCommand> m_maxVAndADriveCommand;
-  std::unique_ptr<XsAndOsCommand> m_xsAndOsCommand;
-  std::unique_ptr<RotateModulesCommand> m_rotateModulesCommand;
-  std::unique_ptr<SquareCommand> m_squareCommand;
-  std::unique_ptr<SpirographCommand> m_spirographCommand;
-  std::unique_ptr<OrbitCommand> m_orbitCommand;
-  std::unique_ptr<PirouetteCommand> m_pirouetteCommand;
-  std::unique_ptr<SpinCommand> m_spinCommand;
 
   frc::XboxController m_xbox{0};
   frc::GenericHID m_buttonBoard{1};

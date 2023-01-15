@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Constants.h"
-#include "subsystems/PWMAngleSensor.h"
-#include "subsystems/ShuffleboardWidgets.h"
 #include "subsystems/SmartMotor.h"
 #include "subsystems/SparkMax.h"
 

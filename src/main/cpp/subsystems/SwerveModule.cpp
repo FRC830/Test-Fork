@@ -454,76 +454,7 @@ void SwerveModule::ResetEncoders() noexcept
 
 // This sets up the test mode shuffleboard tab; everything is specified
 // programmatically.
-void SwerveModule::TestInit() noexcept
-{
-    ResetEncoders();
 
-    m_testModeControl = true;
-    m_turningMotorControllerValidated = false;
-    m_driveMotorControllerValidated = false;
-
-    std::printf("Swerve Module (%s) Test Mode Init... ", m_name.c_str());
-
-    // It would be very nice if Shufflboard allowed specifying properties here:
-    // "gridSize": 32.0
-    // "showGrid": false
-    // "hgap": 0.0
-    // "vgap": 0.0
-    // As it is, best results will be obtained when the defaults for new tabs
-    // are set in this way, except that the defaults do not seem to be applied.
-    frc::ShuffleboardTab &shuffleboardTab = frc::Shuffleboard::GetTab(m_name);
-
-    // Setup three grids for groupings of individual widgets.
-
-    frc::ShuffleboardLayout &shuffleboardLayoutTurningPosition =
-        shuffleboardTab.GetLayout("Turning Position",
-                                  frc::BuiltInLayouts::kGrid)
-            .WithPosition(0, 0)
-            .WithSize(8, 13)
-            .WithProperties(wpi::StringMap<std::shared_ptr<nt::Value>>{
-                std::make_pair("Number of columns", nt::Value::MakeDouble(3.0)),
-                std::make_pair("Number of rows", nt::Value::MakeDouble(3.0))});
-
-    frc::ShuffleboardLayout &shuffleboardLayoutTurningMotor =
-        shuffleboardTab.GetLayout("Turning Motor",
-                                  frc::BuiltInLayouts::kGrid)
-            .WithPosition(8, 0)
-            .WithSize(20, 6)
-            .WithProperties(wpi::StringMap<std::shared_ptr<nt::Value>>{
-                std::make_pair("Number of columns", nt::Value::MakeDouble(6.0)),
-                std::make_pair("Number of rows", nt::Value::MakeDouble(2.0))});
-
-    frc::ShuffleboardLayout &shuffleboardLayoutDriveMotor =
-        shuffleboardTab.GetLayout("Drive Motor",
-                                  frc::BuiltInLayouts::kGrid)
-            .WithPosition(8, 7)
-            .WithSize(20, 6)
-            .WithProperties(wpi::StringMap<std::shared_ptr<nt::Value>>{
-                std::make_pair("Number of columns", nt::Value::MakeDouble(6.0)),
-                std::make_pair("Number of rows", nt::Value::MakeDouble(2.0))});
-
-    // Setup widgets.  XXX add fcn parameters
-    // m_turningPositionPWM->ShuffleboardCreate(
-    //     shuffleboardLayoutTurningPosition,
-    //     [&]() -> std::pair<units::angle::degree_t, units::angle::degree_t>
-    //     { return std::make_pair(m_commandedHeading, m_turningMotor->GetPosition()); });
-
-    m_turningMotor->ShuffleboardCreate(
-        shuffleboardLayoutTurningMotor,
-        [&](double control) -> void
-        { m_turningControlUI = control; },
-        [&]() -> void
-        { m_turningControlUI = 0.0; m_turningResetUI = true; });
-
-    m_driveMotor->ShuffleboardCreate(
-        shuffleboardLayoutDriveMotor,
-        [&](double control) -> void
-        { m_driveControlUI = control; },
-        [&]() -> void
-        { m_driveControlUI = 0.0; m_driveResetUI = true; });
-
-    std::printf(" OK.\n");
-}
 
 void SwerveModule::TestExit() noexcept
 {

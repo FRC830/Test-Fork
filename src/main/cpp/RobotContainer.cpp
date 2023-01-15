@@ -20,8 +20,6 @@ RobotContainer::RobotContainer() noexcept
 {
   // Initialize all of your commands and subsystems here
 
-  m_LEDPatternCount = m_infrastructureSubsystem.GetLEDPatternCount();
-
   // Configure the button bindings
   ConfigureButtonBindings();
 
@@ -50,70 +48,27 @@ RobotContainer::RobotContainer() noexcept
       driveRequirements);
 
   // Point swerve modules, but do not actually drive.
-  m_pointCommand = std::make_unique<frc2::RunCommand>(
-      [&]() -> void
-      {
-        const auto controls = GetDriveTeleopControls();
-
-        units::angle::radian_t angle{std::atan2(std::get<0>(controls), std::get<1>(controls))};
-
-        // Ingnore return (bool); no need to check that commanded angle has
-        // been reached.
-        (void)m_driveSubsystem.SetTurningPosition(angle);
-      },
-      driveRequirements);
-
-  m_oneBallAuto = std::make_unique<OneBallAuto>(&m_driveSubsystem, &m_feederSubsystem, &m_infrastructureSubsystem, &m_shooterSubsystem);
-  m_twoBallAuto = std::make_unique<TwoBallAuto>(&m_driveSubsystem, &m_feederSubsystem, &m_infrastructureSubsystem, &m_shooterSubsystem);
-
-  m_zeroCommand = std::make_unique<ZeroCommand>(&m_driveSubsystem);
-  m_maxVAndATurningCommand = std::make_unique<MaxVAndATurningCommand>(&m_driveSubsystem);
-  m_maxVAndADriveCommand = std::make_unique<MaxVAndADriveCommand>(&m_driveSubsystem);
-  m_xsAndOsCommand = std::make_unique<XsAndOsCommand>(&m_driveSubsystem);
-  m_rotateModulesCommand = std::make_unique<RotateModulesCommand>(&m_driveSubsystem);
-  m_squareCommand = std::make_unique<SquareCommand>(&m_driveSubsystem);
-  m_spirographCommand = std::make_unique<SpirographCommand>(&m_driveSubsystem);
-  m_orbitCommand = std::make_unique<OrbitCommand>(&m_driveSubsystem);
-  m_pirouetteCommand = std::make_unique<PirouetteCommand>(&m_driveSubsystem);
-  m_spinCommand = std::make_unique<SpinCommand>(&m_driveSubsystem);
+  
 }
 
 void RobotContainer::AutonomousInit() noexcept
 {
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 
   m_driveSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void {},
                                                       {&m_driveSubsystem}));
-  m_feederSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void {},
-                                                       {&m_feederSubsystem}));
-  m_shooterSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void {},
-                                                        {&m_shooterSubsystem}));
-  m_infrastructureSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void {},
-                                                               {&m_infrastructureSubsystem}));
 }
 
 void RobotContainer::TeleopInit() noexcept
 {
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 
   m_driveSubsystem.SetDefaultCommand(*m_driveCommand);
-  m_feederSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void
-                                                       { m_feederSubsystem.Default(m_xbox.GetRightTriggerAxis()); },
-                                                       {&m_feederSubsystem}));
-  m_shooterSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void
-                                                        { m_shooterSubsystem.Default(m_xbox.GetLeftTriggerAxis(), m_shooterVelocity); },
-                                                        {&m_shooterSubsystem}));
-  m_infrastructureSubsystem.SetDefaultCommand(frc2::RunCommand([&]() -> void
-                                                               { m_infrastructureSubsystem.SetLEDPattern(m_LEDPattern); },
-                                                               {&m_infrastructureSubsystem}));
+
 }
 
 void RobotContainer::ConfigureButtonBindings() noexcept
@@ -129,84 +84,16 @@ void RobotContainer::ConfigureButtonBindings() noexcept
                                                                                                   { m_fieldOriented = false; },
                                                                                                   {}));
   frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kY).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                    
                                                                                                   { m_driveSubsystem.ZeroHeading();
                                                                                             m_fieldOriented = true; },
                                                                                                   {&m_driveSubsystem}));
 
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kLeftBumper).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                                                                         { m_feederSubsystem.Fire(); },
-                                                                                                         {&m_feederSubsystem}));
+ 
 
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kRightBumper).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                                                                          { m_feederSubsystem.Eject(); },
-                                                                                                          {&m_feederSubsystem}));
-
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kStart).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                                                                    { m_feederSubsystem.Raise(); },
-                                                                                                    {&m_feederSubsystem}));
-
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kBack).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                                                                   { m_feederSubsystem.Lower(); },
-                                                                                                   {&m_feederSubsystem}));
-
-  frc2::POVButton(&m_xbox, 90).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                              { m_feederSubsystem.LockIntake(); },
-                                                              {&m_feederSubsystem}));
-
-  frc2::POVButton(&m_xbox, 270).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                               { m_feederSubsystem.DropIntake(); },
-                                                               {&m_feederSubsystem}));
-
-  frc2::POVButton(&m_xbox, 0).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                             { m_feederSubsystem.RaiseIntake(); },
-                                                             {&m_feederSubsystem}));
-
-  frc2::POVButton(&m_xbox, 180).WhileHeld(frc2::InstantCommand([&]() -> void
-                                                               { m_feederSubsystem.LowerIntake(); },
-                                                               {&m_feederSubsystem}));
-
-  frc2::JoystickButton(&m_buttonBoard, 5).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                           { m_shooterVelocity = -500.0; },
-                                                                           {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 6).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                           { m_lock = true; },
-                                                                           {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 6).WhenReleased(frc2::InstantCommand([&]() -> void
-                                                                            { m_lock = false; },
-                                                                            {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 10).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                            { m_shooterVelocity = 1320.0; },
-                                                                            {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 11).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                            { m_shooterVelocity = 930.0; },
-                                                                            {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 12).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                            { m_shooterVelocity = 400.0; },
-                                                                            {}));
-
-  frc2::JoystickButton(&m_buttonBoard, 7).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                           { ++m_LEDPattern;
-                                                                     if (m_LEDPattern >= m_LEDPatternCount) { m_LEDPattern = 0; }
-                                                                     std::printf("LED Pattern[%u]: %s\n", m_LEDPattern, std::string(m_infrastructureSubsystem.GetLEDPatternDescription(m_LEDPattern)).c_str()); },
-                                                                           {}));
 }
 
-frc2::Command *RobotContainer::GetAutonomousCommand() noexcept
-{
-  if (m_buttonBoard.GetRawButton(9))
-  {
-    return m_twoBallAuto.get();
-  }
-  else
-  {
-    return m_oneBallAuto.get();
-  }
-}
+
 
 std::tuple<double, double, double, bool> RobotContainer::GetDriveTeleopControls() noexcept
 {
@@ -290,29 +177,14 @@ void RobotContainer::TestInit() noexcept
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 
   m_driveSubsystem.TestInit();
-  m_feederSubsystem.TestInit();
-  m_shooterSubsystem.TestInit();
 
   frc::SendableChooser<frc2::Command *> *chooser = m_driveSubsystem.TestModeChooser();
 
-  chooser->SetDefaultOption("Zero", m_zeroCommand.get());
-  chooser->AddOption("Turning Max", m_maxVAndATurningCommand.get());
-  chooser->AddOption("Drive Max", m_maxVAndADriveCommand.get());
-  chooser->AddOption("Xs and Os", m_xsAndOsCommand.get());
-  chooser->AddOption("RotateModules", m_rotateModulesCommand.get());
-  chooser->AddOption("Point", m_pointCommand.get());
-  chooser->AddOption("Square", m_squareCommand.get());
-  chooser->AddOption("Spirograph", m_spirographCommand.get());
-  chooser->AddOption("Orbit", m_orbitCommand.get());
-  chooser->AddOption("Pirouette", m_pirouetteCommand.get());
-  chooser->AddOption("Drive", m_driveCommand.get());
-  chooser->AddOption("Spin", m_spinCommand.get());
+
 
   frc2::CommandScheduler::GetInstance().Enable();
 }
@@ -322,21 +194,15 @@ void RobotContainer::TestExit() noexcept
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 
   m_driveSubsystem.TestExit();
-  m_feederSubsystem.TestExit();
-  m_shooterSubsystem.TestExit();
 }
 
 void RobotContainer::TestPeriodic() noexcept
 {
   m_driveSubsystem.TestPeriodic();
-  m_feederSubsystem.TestPeriodic();
-  m_shooterSubsystem.TestPeriodic();
 }
 
 void RobotContainer::DisabledInit() noexcept
@@ -344,8 +210,6 @@ void RobotContainer::DisabledInit() noexcept
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 
@@ -358,8 +222,6 @@ void RobotContainer::DisabledInit() noexcept
 void RobotContainer::DisabledExit() noexcept
 {
   m_driveSubsystem.ClearFaults();
-  m_feederSubsystem.ClearFaults();
-  m_shooterSubsystem.ClearFaults();
 
   m_driveSubsystem.ResetEncoders();
 

@@ -8,6 +8,7 @@
 #include <frc/DriverStation.h>
 #include <frc/livewindow/LiveWindow.h>
 #include <frc2/command/CommandScheduler.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() noexcept
 {
@@ -32,6 +33,8 @@ void Robot::RobotInit() noexcept
 void Robot::RobotPeriodic() noexcept
 {
   frc2::CommandScheduler::GetInstance().Run();
+  
+  frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
 }
 
 /**
@@ -61,7 +64,6 @@ void Robot::AutonomousInit() noexcept
 {
   m_container.TestExit();
 
-  m_autonomousCommand = m_container.GetAutonomousCommand();
 
   if (m_autonomousCommand)
   {

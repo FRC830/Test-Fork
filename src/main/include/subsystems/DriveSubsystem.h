@@ -204,16 +204,6 @@ private:
   frc::SwerveModuleState m_commandedStateRearLeft{};
   frc::SwerveModuleState m_commandedStateRearRight{};
 
-  // Test Mode (only) instance of a "Gyro", needed for Shuffleboard UI.
-  HeadingGyro m_frontLeftGyro;
-  HeadingGyro m_frontRightGyro;
-  HeadingGyro m_rearLeftGyro;
-  HeadingGyro m_rearRightGyro;
-
-  // Test Mode (only) instances of TuningPID, needed for Shuffleboard UI.
-  std::unique_ptr<TuningPID> m_turningPositionPIDController;
-  std::unique_ptr<TuningPID> m_drivePositionPIDController;
-  std::unique_ptr<TuningPID> m_driveVelocityPIDController;
 
   double m_minProcessVariable{0.0};
   double m_maxProcessVariable{0.0};
