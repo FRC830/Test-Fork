@@ -154,7 +154,7 @@ void DriveSubsystem::Periodic() noexcept
     if (m_ahrs)
     {
       botRot = -m_ahrs->GetRotation2d();
-      frc::SmartDashboard::PutNumber("botRot", (double)botRot.Degrees());
+      frc::SmartDashboard::PutNumber("botRot", (double)m_ahrs->GetAngle());
     }
     else
     {
