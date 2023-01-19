@@ -7,7 +7,14 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
-#include "RobotContainer.h"
+#include <frc/GenericHID.h>
+#include <frc/XboxController.h>
+#include <frc2/command/RunCommand.h>
+
+#include "subsystems/DriveSubsystem.h"
+
+#include <memory>
+#include <tuple>
 
 class Robot : public frc::TimedRobot
 {
@@ -32,5 +39,20 @@ private:
   // doesn't have undefined behavior and potentially crash.
   frc2::Command *m_autonomousCommand{nullptr};
 
-  RobotContainer m_container;
+  std::tuple<double, double, double, bool> GetDriveTeleopControls() noexcept;
+
+  void ConfigureButtonBindings() noexcept;
+
+  bool m_fieldOriented{false};
+  bool m_lock{false};
+  bool m_slow{false};
+
+  // The robot's subsystems and commands are defined here...
+  DriveSubsystem m_driveSubsystem;
+
+  std::unique_ptr<frc2::RunCommand> m_driveCommand;
+  std::unique_ptr<frc2::RunCommand> m_pointCommand;
+
+  frc::XboxController m_xbox{0};
+  frc::GenericHID m_buttonBoard{1};
 };

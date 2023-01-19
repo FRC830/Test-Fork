@@ -379,19 +379,6 @@ bool DriveSubsystem::SetDriveDistance(units::length::meter_t distance) noexcept
   return (fl && fr && rl && rr) || !m_run;
 }
 
-// The most general form of movement for a swerve is specified by thee vectors,
-// at each wheel: X and Y velocity, and rotational velocity, about an arbitrary
-// point in the XY plane.  By default, this point is the center of the robot.
-// Of course, each of these velocities may be continually varied.  By
-// specifying a center of rotation (shared by all wheels), this could be made
-// fully general.
-
-// Another means of specifying movement is to point each swerve module from
-// rest, then to specify a distance to translate.  In this mode, any rotation
-// would normally be done distinct from translation, providing a simple means
-// of dead reckoning.  This involves periodically sending the same turning or
-// drive command untile the commanded motion has been achieved.
-
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
                            bool fieldRelative, units::meter_t x_center, units::meter_t y_center) noexcept

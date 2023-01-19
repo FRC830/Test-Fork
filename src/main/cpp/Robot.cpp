@@ -10,6 +10,19 @@
 #include <frc2/command/CommandScheduler.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "Constants.h"
+
+#include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/button/POVButton.h>
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandScheduler.h>
+#include <frc2/command/InstantCommand.h>
+#include <frc2/command/RunCommand.h>
+
+#include <cmath>
+#include <cstdio>
+#include <string>
+
 void Robot::RobotInit() noexcept
 {
   frc::LiveWindow::SetEnabled(false);
@@ -17,6 +30,38 @@ void Robot::RobotInit() noexcept
 
   frc::DataLogManager::Start();
   frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+
+    // Initialize all of your commands and subsystems here
+
+  // Configure the button bindings
+  ConfigureButtonBindings();
+
+  // Set up default drive command; non-owning pointer is passed by value.
+  auto driveRequirements = {dynamic_cast<frc2::Subsystem *>(&m_driveSubsystem)};
+
+  // Drive, as commanded by operator joystick controls.
+  m_driveCommand = std::make_unique<frc2::RunCommand>(
+      [&]() -> void
+      {
+        if (m_lock)
+        {
+          (void)m_driveSubsystem.SetLockWheelsX();
+
+          return;
+        }
+
+        const auto controls = GetDriveTeleopControls();
+
+        m_driveSubsystem.Drive(
+            std::get<0>(controls) * physical::kMaxDriveSpeed,
+            std::get<1>(controls) * physical::kMaxDriveSpeed,
+            std::get<2>(controls) * physical::kMaxTurnRate,
+            std::get<3>(controls));
+      },
+      driveRequirements);
+
+  // Point swerve modules, but do not actually drive.
+  
 }
 
 /**
@@ -65,8 +110,11 @@ void Robot::TeleopInit() noexcept {
 
   frc::SmartDashboard::PutNumber("Death", 500);
 
+  m_driveSubsystem.ClearFaults();
 
-  m_container.TeleopInit();
+  m_driveSubsystem.ResetEncoders();
+
+  m_driveSubsystem.SetDefaultCommand(*m_driveCommand);
 }
 
 /**
@@ -88,6 +136,83 @@ void Robot::TestPeriodic() noexcept
 }
 
 void Robot::TestExit() noexcept {}
+
+
+void Robot::ConfigureButtonBindings() noexcept
+{
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  { m_slow = true; },
+                                                                                                  {}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kB).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  { m_slow = false; },
+                                                                                                  {}));
+
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kX).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  { m_fieldOriented = false; },
+                                                                                                  {}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kY).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                    
+                                                                                                  { m_driveSubsystem.ZeroHeading();
+                                                                                            m_fieldOriented = true; },
+                                                                                                  {&m_driveSubsystem}));
+
+ 
+
+}
+
+
+
+std::tuple<double, double, double, bool> Robot::GetDriveTeleopControls() noexcept
+{
+  double x = -m_xbox.GetLeftY();
+  double y = -m_xbox.GetLeftX();
+  double z = -m_xbox.GetRightX();
+
+  // between out = in^3.0 and out = in.
+  auto shape = [](double raw, double mixer = 0.75) -> double
+  {
+    // Input deadband around 0.0 (+/- range).
+    constexpr double range = 0.05;
+
+    constexpr double slope = 1.0 / (1.0 - range);
+
+    if (raw >= -range && raw <= +range)
+    {
+      raw = 0.0;
+    }
+    else if (raw < -range)
+    {
+      raw += range;
+      raw *= slope;
+    }
+    else if (raw > +range)
+    {
+      raw -= range;
+      raw *= slope;
+    }
+
+    return mixer * std::pow(raw, 3.0) + (1.0 - mixer) * raw;
+  };
+
+  x = shape(x);
+  y = shape(y);
+  z = shape(z, 0.0);
+
+  if (m_slow)
+  {
+    x *= 0.50;
+    y *= 0.50;
+    z *= 0.40;
+  }
+  else
+  { // XXX Still needed?
+    x *= 2.0;
+    y *= 2.0;
+    z *= 1.6;
+  }
+
+  return std::make_tuple(x, y, z, m_fieldOriented);
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main()
