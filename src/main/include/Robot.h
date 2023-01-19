@@ -14,9 +14,9 @@ class Robot : public frc::TimedRobot
 public:
   void RobotInit() noexcept override;
   void RobotPeriodic() noexcept override;
-  void DisabledInit() noexcept override;
+  // void DisabledInit() noexcept override;
   void DisabledPeriodic() noexcept override;
-  void DisabledExit() noexcept override;
+  //void DisabledExit() noexcept override;
   void AutonomousInit() noexcept override;
   void AutonomousPeriodic() noexcept override;
   void AutonomousExit() noexcept override;

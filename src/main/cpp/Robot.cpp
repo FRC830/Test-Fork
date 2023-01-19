@@ -42,19 +42,9 @@ void Robot::RobotPeriodic() noexcept
  * can use it to reset any subsystem information you want to clear when the
  * robot is disabled.
  */
-void Robot::DisabledInit() noexcept
-{
-  m_container.TestExit();
-
-  m_container.DisabledInit();
-}
 
 void Robot::DisabledPeriodic() noexcept {}
 
-void Robot::DisabledExit() noexcept
-{
-  m_container.DisabledExit();
-}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
@@ -62,34 +52,19 @@ void Robot::DisabledExit() noexcept
  */
 void Robot::AutonomousInit() noexcept
 {
-  m_container.TestExit();
 
 
-  if (m_autonomousCommand)
-  {
-    m_autonomousCommand->Schedule();
-  }
 
-  m_container.AutonomousInit();
 }
 
 void Robot::AutonomousPeriodic() noexcept {}
 
 void Robot::AutonomousExit() noexcept {}
 
-void Robot::TeleopInit() noexcept
-{
-  m_container.TestExit();
+void Robot::TeleopInit() noexcept {
 
-  // This makes sure that the autonomous stops running when
-  // teleop starts running. If you want the autonomous to
-  // continue until interrupted by another command, remove
-  // this line or comment it out.
-  if (m_autonomousCommand)
-  {
-    m_autonomousCommand->Cancel();
-    m_autonomousCommand = nullptr;
-  }
+  frc::SmartDashboard::PutNumber("Death", 500);
+
 
   m_container.TeleopInit();
 }
@@ -101,10 +76,7 @@ void Robot::TeleopPeriodic() noexcept {}
 
 void Robot::TeleopExit() noexcept {}
 
-void Robot::TestInit() noexcept
-{
-  m_container.TestInit();
-}
+void Robot::TestInit() noexcept {}
 
 /**
  * This function is called periodically during test mode.
@@ -113,7 +85,6 @@ void Robot::TestInit() noexcept
  */
 void Robot::TestPeriodic() noexcept
 {
-  m_container.TestPeriodic();
 }
 
 void Robot::TestExit() noexcept {}
