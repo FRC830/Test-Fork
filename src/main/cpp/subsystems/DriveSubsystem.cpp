@@ -161,8 +161,8 @@ void DriveSubsystem::Periodic() noexcept
   double theta = m_orientationController->Calculate(botRot.Degrees());
   units::angle::degree_t error = m_orientationController->GetPositionError();
 
-  frc::SmartDashboard::PutNumber("turning error", (double)error);
 
+  frc::SmartDashboard::PutNumber("turning error", (double)error);
   if (error > +177.5_deg)
   {
     theta = +m_lagrange;
@@ -181,10 +181,15 @@ void DriveSubsystem::Periodic() noexcept
     theta -= m_thetaF;
   }
   m_theta = theta;
+  frc::SmartDashboard::PutNumber("turning error theta", (double)theta);
 
   m_odometry->Update(botRot, m_frontLeftSwerveModule->GetState(),
                      m_frontRightSwerveModule->GetState(), m_rearLeftSwerveModule->GetState(),
                      m_rearRightSwerveModule->GetState());
+  frc::SmartDashboard::PutNumber("odorot", double(m_odometry->GetPose().Rotation().Degrees()));
+  frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().X()));
+  
+  frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().Y()));
 }
 
 frc::Pose2d DriveSubsystem::GetPose() noexcept { return m_odometry->GetPose(); }
@@ -393,13 +398,15 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
             {
     if (m_ahrs)
     {
-      botRot = -m_ahrs->GetRotation2d();
+      botRot = m_ahrs->GetRotation2d();
     } });
 
   if (!m_ahrs)
   {
     fieldRelative = false;
   }
+
+  //rot = rot + (physical::kMaxTurnRate* (int)m_theta/30);
 
   // Center of rotation argument is defaulted to the center of the robot above,
   // but it is also possible to rotate about a different point.
