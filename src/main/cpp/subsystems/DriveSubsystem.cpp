@@ -158,7 +158,7 @@ void DriveSubsystem::Periodic() noexcept
   // Compute value to apply to correct robot orientation, or to follow rotation
   // profile.  Since things wrap, 180 degrees is a sort of Lagrange Point and
   // needs special handling, using precomputed theta.
-  double theta = m_orientationController->Calculate(botRot.Degrees());
+  double theta = m_orientationController->Calculate(-botRot.Degrees());
   units::angle::degree_t error = m_orientationController->GetPositionError();
 
 
@@ -392,6 +392,8 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   m_x = xSpeed / physical::kMaxDriveSpeed;
   m_y = ySpeed / physical::kMaxDriveSpeed;
 
+
+
   frc::Rotation2d botRot;
 
   DoSafeIMU("GetRotation2d()", [&]() -> void
@@ -410,13 +412,32 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
 
   // Center of rotation argument is defaulted to the center of the robot above,
   // but it is also possible to rotate about a different point.
+
+
+  if (rot != units::angular_velocity::radians_per_second_t(0))
+  {
+    frc::SmartDashboard::PutBoolean("Is turning", true);
+    frc::SmartDashboard::PutNumber("targetRot", (double)targetRot.Degrees());
+    targetRot = botRot;
+  }
+  else{
+    frc::SmartDashboard::PutBoolean("Is turning", false);
+    
+    frc::SmartDashboard::PutNumber("targetRot", (double)targetRot.Degrees());
+  }
+ 
+ 
   wpi::array<frc::SwerveModuleState, 4> states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, botRot)
+                          xSpeed, ySpeed, rot + (physical::kMaxTurnRate* (int)m_theta) * (3.14/180), botRot)
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot},
       frc::Translation2d(x_center, y_center));
 
+
+
   kDriveKinematics.DesaturateWheelSpeeds(&states, physical::kMaxDriveSpeed);
+
+  m_orientationController->SetGoal(targetRot.Degrees());
 
   SetModuleStates(states);
 }

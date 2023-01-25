@@ -267,4 +267,9 @@ private:
   std::string m_frontRightGraphScroll;
   std::string m_rearLeftGraphScroll;
   std::string m_rearRightGraphScroll;
+
+  
+
+  double prevTurnValue = 0.0;
+  frc::Rotation2d targetRot;
 };
