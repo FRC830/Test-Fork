@@ -52,7 +52,7 @@ private:
 
   std::unique_ptr<frc2::RunCommand> m_driveCommand;
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
-
+  
   frc::XboxController m_xbox{0};
   frc::GenericHID m_buttonBoard{1};
 };

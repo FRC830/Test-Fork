@@ -266,6 +266,8 @@ units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
         return m_turningPosition;
     }
 
+    
+
     // Absolute encoder is strongly preferred -- it has very low latency,
     // and is absolute.  Since the same encoder is used with the SPARK MAX,
     // the resolution and direct measurement of turning angle are identical

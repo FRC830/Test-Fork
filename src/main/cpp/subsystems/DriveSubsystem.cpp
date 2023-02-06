@@ -384,6 +384,11 @@ bool DriveSubsystem::SetDriveDistance(units::length::meter_t distance) noexcept
   return (fl && fr && rl && rr) || !m_run;
 }
 
+void DriveSubsystem::shuffAngles()
+{
+  
+}
+
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
                            bool fieldRelative, units::meter_t x_center, units::meter_t y_center) noexcept

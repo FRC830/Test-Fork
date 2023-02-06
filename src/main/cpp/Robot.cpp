@@ -31,7 +31,9 @@ void Robot::RobotInit() noexcept
   frc::DataLogManager::Start();
   frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
 
-    // Initialize all of your commands and subsystems here
+  // Initialize all of your commands and subsystems here
+  //frc2::Command::Initialize();
+
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -52,6 +54,8 @@ void Robot::RobotInit() noexcept
 
         const auto controls = GetDriveTeleopControls();
 
+        
+
         m_driveSubsystem.Drive(
             std::get<0>(controls) * physical::kMaxDriveSpeed,
             std::get<1>(controls) * physical::kMaxDriveSpeed,
@@ -59,6 +63,13 @@ void Robot::RobotInit() noexcept
             std::get<3>(controls));
       },
       driveRequirements);
+  // autonCommand = std::make_unique<frc2::RunCommand>(
+  //     [&]() -> void
+  //     {
+  //     wpi::array<frc::SwerveModuleState, 4> states = kDriveKinematics.ToSwerveModuleStates();
+  //     frc::ChassisSpeeds::FromFieldRelativeSpeeds(0, 0.1, 0, botRot),
+  //     },
+  //     driveRequirements);
 
   // Point swerve modules, but do not actually drive.
   
@@ -78,8 +89,16 @@ void Robot::RobotInit() noexcept
 void Robot::RobotPeriodic() noexcept
 {
   frc2::CommandScheduler::GetInstance().Run();
+
   
-  frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
+      frc::SmartDashboard::PutNumber("Front Left", double(m_driveSubsystem.m_frontLeftSwerveModule->GetTurningPosition()));
+      frc::SmartDashboard::PutNumber("Front Right", double(m_driveSubsystem.m_frontRightSwerveModule->GetTurningPosition()));
+      frc::SmartDashboard::PutNumber("Back Left", double(m_driveSubsystem.m_rearLeftSwerveModule->GetTurningPosition()));
+      frc::SmartDashboard::PutNumber("Back Right", double(m_driveSubsystem.m_rearRightSwerveModule->GetTurningPosition()));
+  
+  // frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
+
+  // DriveSubsystem::shuffAngles();
 }
 
 /**
@@ -97,13 +116,13 @@ void Robot::DisabledPeriodic() noexcept {}
  */
 void Robot::AutonomousInit() noexcept
 {
-
+  // if(autonomousCommand != NULL) autonomousCOmmand->Start();
 
 
 }
 
 void Robot::AutonomousPeriodic() noexcept {}
-
+  // Scheduler::GetInstance()->Run();
 void Robot::AutonomousExit() noexcept {}
 
 void Robot::TeleopInit() noexcept {

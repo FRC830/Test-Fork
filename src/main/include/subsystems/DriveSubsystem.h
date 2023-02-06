@@ -40,6 +40,8 @@ public:
   DriveSubsystem(const DriveSubsystem &) = delete;
   DriveSubsystem &operator=(const DriveSubsystem &) = delete;
 
+  void shuffAngles();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -171,6 +173,13 @@ public:
       frc::Translation2d(-physical::kWheelBase / 2, +physical::kTrackWidth / 2),
       frc::Translation2d(-physical::kWheelBase / 2, -physical::kTrackWidth / 2)};
 
+    
+  // Four swerve modules.
+  std::unique_ptr<SwerveModule> m_frontLeftSwerveModule;
+  std::unique_ptr<SwerveModule> m_frontRightSwerveModule;
+  std::unique_ptr<SwerveModule> m_rearLeftSwerveModule;
+  std::unique_ptr<SwerveModule> m_rearRightSwerveModule;
+
 private:
   void DoSafeIMU(const char *const what, std::function<void()> work) noexcept;
 
@@ -189,11 +198,6 @@ private:
   double m_lagrange{0.0};
   double m_thetaF{pidf::kDriveThetaF};
 
-  // Four swerve modules.
-  std::unique_ptr<SwerveModule> m_frontLeftSwerveModule;
-  std::unique_ptr<SwerveModule> m_frontRightSwerveModule;
-  std::unique_ptr<SwerveModule> m_rearLeftSwerveModule;
-  std::unique_ptr<SwerveModule> m_rearRightSwerveModule;
 
   // Odometry class for tracking robot pose; 4 specifies the number of modules.
   std::unique_ptr<frc::SwerveDriveOdometry<4>> m_odometry;
