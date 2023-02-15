@@ -414,6 +414,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   // but it is also possible to rotate about a different point.
 
 
+
   if (rot != units::angular_velocity::radians_per_second_t(0))
   {
     frc::SmartDashboard::PutBoolean("Is turning", true);
@@ -484,11 +485,10 @@ void DriveSubsystem::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> &desi
   rearLeft.speed *= m_limit;
   rearRight.speed *= m_limit;
 
-  
-  frontLeft.angle = frontLeft.angle + frc::Rotation2d(55.0_deg);
-  frontRight.angle = frontRight.angle + frc::Rotation2d(205.0_deg);
-  rearLeft.angle = rearLeft.angle + frc::Rotation2d(0.0_deg);
-  rearRight.angle = rearRight.angle + frc::Rotation2d(100.0_deg);
+  // frontLeft.angle = frontLeft.angle + frc::Rotation2d(55.0_deg);
+  // frontRight.angle = frontRight.angle + frc::Rotation2d(205.0_deg);
+  // rearLeft.angle = rearLeft.angle + frc::Rotation2d(0.0_deg);
+  // rearRight.angle = rearRight.angle + frc::Rotation2d(100.0_deg);
 
   frc::SmartDashboard::PutNumber("frontLeft.GetTurningPosition()",double(m_frontLeftSwerveModule->GetTurningPosition()));
   frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()",double(m_frontRightSwerveModule->GetTurningPosition()));
@@ -496,10 +496,10 @@ void DriveSubsystem::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> &desi
   frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()",double(m_rearRightSwerveModule->GetTurningPosition()));
 
   // To avoid brownout, reduce power when wheels are too far out of position.
-  const units::angle::degree_t frontLeftTurningError = m_frontLeftSwerveModule->GetTurningPosition() - frontLeft.angle.Degrees() + 45_deg;
-  const units::angle::degree_t frontRightTurningError = m_frontRightSwerveModule->GetTurningPosition() - frontRight.angle.Degrees() + 250_deg;
-  const units::angle::degree_t rearLeftTurningError = m_rearLeftSwerveModule->GetTurningPosition() - rearLeft.angle.Degrees() + 90_deg;
-  const units::angle::degree_t rearRightTurningError = m_rearRightSwerveModule->GetTurningPosition() - rearRight.angle.Degrees() + 90_deg;
+  const units::angle::degree_t frontLeftTurningError = m_frontLeftSwerveModule->GetTurningPosition() - frontLeft.angle.Degrees();
+  const units::angle::degree_t frontRightTurningError = m_frontRightSwerveModule->GetTurningPosition() - frontRight.angle.Degrees();
+  const units::angle::degree_t rearLeftTurningError = m_rearLeftSwerveModule->GetTurningPosition() - rearLeft.angle.Degrees();
+  const units::angle::degree_t rearRightTurningError = m_rearRightSwerveModule->GetTurningPosition() - rearRight.angle.Degrees();
   const double totalTurningError = std::abs(frontLeftTurningError.to<double>()) +
                                    std::abs(frontRightTurningError.to<double>()) +
                                    std::abs(rearLeftTurningError.to<double>()) +
@@ -541,6 +541,8 @@ void DriveSubsystem::ZeroHeading() noexcept
     {
       m_ahrs->ZeroYaw();
     } });
+
+    targetRot = frc::Rotation2d(0.0_deg);
 }
 
 double DriveSubsystem::GetTurnRate() noexcept

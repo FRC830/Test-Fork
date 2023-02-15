@@ -33,6 +33,8 @@
 #include <sstream>
 #include <string>
 
+#include <iostream>
+
 SwerveModule::SwerveModule(
     const char *const name,
     const int driveMotorCanID,
@@ -261,9 +263,13 @@ units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 
     if (position.has_value())
     {
+        std::cout << "has value" << std::endl;
         m_turningPosition = position.value();
 
         return m_turningPosition;
+    }
+    else{
+        std::cout << "does not have value" << std::endl;
     }
 
     // Absolute encoder is strongly preferred -- it has very low latency,
