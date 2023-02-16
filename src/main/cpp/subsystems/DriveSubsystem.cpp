@@ -524,6 +524,14 @@ void DriveSubsystem::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> &desi
   m_rearRightSwerveModule->SetDesiredState(rearRight);
 }
 
+void DriveSubsystem::OutputWheelPositions()
+{
+  frc::SmartDashboard::PutNumber("frontLeft.GetTurningPosition()", double(m_frontLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()", double(m_frontRightSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearLeft.GetTurningPosition()", double(m_rearLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()", double(m_rearRightSwerveModule->GetTurningPosition()));
+}
+
 units::degree_t DriveSubsystem::GetHeading() noexcept
 {
   units::degree_t heading{0.0};

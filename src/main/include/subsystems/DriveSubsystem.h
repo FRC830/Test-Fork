@@ -180,6 +180,8 @@ public:
   std::unique_ptr<SwerveModule> m_rearLeftSwerveModule;
   std::unique_ptr<SwerveModule> m_rearRightSwerveModule;
 
+  void OutputWheelPositions();
+
 private:
   void DoSafeIMU(const char *const what, std::function<void()> work) noexcept;
 

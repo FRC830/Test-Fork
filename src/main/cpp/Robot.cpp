@@ -95,6 +95,8 @@ void Robot::RobotPeriodic() noexcept
       frc::SmartDashboard::PutNumber("Front Right", double(m_driveSubsystem.m_frontRightSwerveModule->GetTurningPosition()));
       frc::SmartDashboard::PutNumber("Back Left", double(m_driveSubsystem.m_rearLeftSwerveModule->GetTurningPosition()));
       frc::SmartDashboard::PutNumber("Back Right", double(m_driveSubsystem.m_rearRightSwerveModule->GetTurningPosition()));
+
+    m_driveSubsystem.OutputWheelPositions();
   
   // frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
 
