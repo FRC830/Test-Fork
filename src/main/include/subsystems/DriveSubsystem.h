@@ -43,6 +43,8 @@ public:
   DriveSubsystem(const DriveSubsystem &) = delete;
   DriveSubsystem &operator=(const DriveSubsystem &) = delete;
 
+  void shuffAngles();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -176,6 +178,15 @@ public:
       frc::Translation2d(-physical::kWheelBase / 2, +physical::kTrackWidth / 2),
       frc::Translation2d(-physical::kWheelBase / 2, -physical::kTrackWidth / 2)};
 
+    
+  // Four swerve modules.
+  std::unique_ptr<SwerveModule> m_frontLeftSwerveModule;
+  std::unique_ptr<SwerveModule> m_frontRightSwerveModule;
+  std::unique_ptr<SwerveModule> m_rearLeftSwerveModule;
+  std::unique_ptr<SwerveModule> m_rearRightSwerveModule;
+
+  void OutputWheelPositions();
+
 private:
   void DoSafeIMU(const char *const what, std::function<void()> work) noexcept;
 
@@ -194,11 +205,6 @@ private:
   double m_lagrange{0.0};
   double m_thetaF{pidf::kDriveThetaF};
 
-  // Four swerve modules.
-  std::unique_ptr<SwerveModule> m_frontLeftSwerveModule;
-  std::unique_ptr<SwerveModule> m_frontRightSwerveModule;
-  std::unique_ptr<SwerveModule> m_rearLeftSwerveModule;
-  std::unique_ptr<SwerveModule> m_rearRightSwerveModule;
 
   // Odometry class for tracking robot pose; 4 specifies the number of modules.
   std::unique_ptr<frc::SwerveDriveOdometry<4>> m_odometry;
@@ -209,16 +215,6 @@ private:
   frc::SwerveModuleState m_commandedStateRearLeft{};
   frc::SwerveModuleState m_commandedStateRearRight{};
 
-  // Test Mode (only) instance of a "Gyro", needed for Shuffleboard UI.
-  HeadingGyro m_frontLeftGyro;
-  HeadingGyro m_frontRightGyro;
-  HeadingGyro m_rearLeftGyro;
-  HeadingGyro m_rearRightGyro;
-
-  // Test Mode (only) instances of TuningPID, needed for Shuffleboard UI.
-  std::unique_ptr<TuningPID> m_turningPositionPIDController;
-  std::unique_ptr<TuningPID> m_drivePositionPIDController;
-  std::unique_ptr<TuningPID> m_driveVelocityPIDController;
 
   double m_minProcessVariable{0.0};
   double m_maxProcessVariable{0.0};
@@ -248,6 +244,7 @@ private:
   double m_testModeTurningVoltage{0.0};
   double m_testModeDriveVoltage{0.0};
   SwerveModule::GraphSelection m_graphSelection{SwerveModule::GraphSelection::kNone};
+  
 
   // Test Mode (only) data, obtained but not owned.
   frc::ComplexWidget *m_frontLeftTurning{nullptr};
@@ -282,4 +279,9 @@ private:
   std::string m_frontRightGraphScroll;
   std::string m_rearLeftGraphScroll;
   std::string m_rearRightGraphScroll;
+
+  
+
+  double prevTurnValue = 0.0;
+  frc::Rotation2d targetRot;
 };

@@ -1,13 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
-// See https://docs.wpilib.org/en/latest/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html.
-// See https://docs.wpilib.org/en/latest/docs/software/kinematics-and-odometry/swerve-drive-odometry.html.
-// See https://github.com/wpilibsuite/allwpilib/blob/main/wpilibcExamples/src/main/cpp/examples/SwerveControllerCommand/cpp/subsystems/DriveSubsystem.cpp.
-
 #include "subsystems/DriveSubsystem.h"
 #include "infrastructure/SwerveModule.h"
+
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include <frc/DataLogManager.h>
 #include <frc/shuffleboard/BuiltInWidgets.h>
@@ -163,6 +157,7 @@ void DriveSubsystem::Periodic() noexcept
     if (m_ahrs)
     {
       botRot = -m_ahrs->GetRotation2d();
+      frc::SmartDashboard::PutNumber("botRot", (double)m_ahrs->GetAngle());
     }
     else
     {
@@ -174,9 +169,11 @@ void DriveSubsystem::Periodic() noexcept
   // Compute value to apply to correct robot orientation, or to follow rotation
   // profile.  Since things wrap, 180 degrees is a sort of Lagrange Point and
   // needs special handling, using precomputed theta.
-  double theta = m_orientationController->Calculate(botRot.Degrees());
+  double theta = m_orientationController->Calculate(-botRot.Degrees());
   units::angle::degree_t error = m_orientationController->GetPositionError();
 
+
+  frc::SmartDashboard::PutNumber("turning error", (double)error);
   if (error > +177.5_deg)
   {
     theta = +m_lagrange;
@@ -195,8 +192,19 @@ void DriveSubsystem::Periodic() noexcept
     theta -= m_thetaF;
   }
   m_theta = theta;
+  frc::SmartDashboard::PutNumber("turning error theta", (double)theta);
 
+<<<<<<< HEAD
   m_odometry->Update(botRot, GetModulePositions());
+=======
+  m_odometry->Update(botRot, m_frontLeftSwerveModule->GetState(),
+                     m_frontRightSwerveModule->GetState(), m_rearLeftSwerveModule->GetState(),
+                     m_rearRightSwerveModule->GetState());
+  frc::SmartDashboard::PutNumber("odorot", double(m_odometry->GetPose().Rotation().Degrees()));
+  frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().X()));
+  
+  frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().Y()));
+>>>>>>> 7ab74c379b7679a51ec671239f043571bc2d693f
 }
 
 frc::Pose2d DriveSubsystem::GetPose() noexcept { return m_odometry->GetPose(); }
@@ -215,6 +223,7 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) noexcept
   m_odometry->ResetPosition(botRot, GetModulePositions(), pose);
 }
 
+<<<<<<< HEAD
 void DriveSubsystem::CreateGraphTab(SwerveModule::GraphSelection graphSelection) noexcept
 {
   // Only do this once.
@@ -782,6 +791,8 @@ void DriveSubsystem::DisabledExit() noexcept
   UpdateGraphTab(m_graphSelection);
 }
 
+=======
+>>>>>>> 7ab74c379b7679a51ec671239f043571bc2d693f
 bool DriveSubsystem::GetStatus() const noexcept
 {
   return m_ahrs &&
@@ -958,18 +969,10 @@ bool DriveSubsystem::SetDriveDistance(units::length::meter_t distance) noexcept
   return (fl && fr && rl && rr) || !m_run;
 }
 
-// The most general form of movement for a swerve is specified by thee vectors,
-// at each wheel: X and Y velocity, and rotational velocity, about an arbitrary
-// point in the XY plane.  By default, this point is the center of the robot.
-// Of course, each of these velocities may be continually varied.  By
-// specifying a center of rotation (shared by all wheels), this could be made
-// fully general.
-
-// Another means of specifying movement is to point each swerve module from
-// rest, then to specify a distance to translate.  In this mode, any rotation
-// would normally be done distinct from translation, providing a simple means
-// of dead reckoning.  This involves periodically sending the same turning or
-// drive command untile the commanded motion has been achieved.
+void DriveSubsystem::shuffAngles()
+{
+  
+}
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
@@ -979,13 +982,15 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   m_x = xSpeed / physical::kMaxDriveSpeed;
   m_y = ySpeed / physical::kMaxDriveSpeed;
 
+
+
   frc::Rotation2d botRot;
 
   DoSafeIMU("GetRotation2d()", [&]() -> void
             {
     if (m_ahrs)
     {
-      botRot = -m_ahrs->GetRotation2d();
+      botRot = m_ahrs->GetRotation2d();
     } });
 
   if (!m_ahrs)
@@ -993,15 +998,37 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     fieldRelative = false;
   }
 
+  //rot = rot + (physical::kMaxTurnRate* (int)m_theta/30);
+
   // Center of rotation argument is defaulted to the center of the robot above,
   // but it is also possible to rotate about a different point.
+
+
+
+  if (rot != units::angular_velocity::radians_per_second_t(0))
+  {
+    frc::SmartDashboard::PutBoolean("Is turning", true);
+    frc::SmartDashboard::PutNumber("targetRot", (double)targetRot.Degrees());
+    targetRot = botRot;
+  }
+  else{
+    frc::SmartDashboard::PutBoolean("Is turning", false);
+    
+    frc::SmartDashboard::PutNumber("targetRot", (double)targetRot.Degrees());
+  }
+ 
+ 
   wpi::array<frc::SwerveModuleState, 4> states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, botRot)
+                          xSpeed, ySpeed, rot + (physical::kMaxTurnRate* (int)m_theta) * (3.14/180), botRot)
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot},
       frc::Translation2d(x_center, y_center));
 
+
+
   kDriveKinematics.DesaturateWheelSpeeds(&states, physical::kMaxDriveSpeed);
+
+  m_orientationController->SetGoal(targetRot.Degrees());
 
   SetModuleStates(states);
 }
@@ -1048,6 +1075,16 @@ void DriveSubsystem::SetModuleStates(std::array<frc::SwerveModuleState, 4> &desi
   rearLeft.speed *= m_limit;
   rearRight.speed *= m_limit;
 
+  // frontLeft.angle = frontLeft.angle + frc::Rotation2d(55.0_deg);
+  // frontRight.angle = frontRight.angle + frc::Rotation2d(205.0_deg);
+  // rearLeft.angle = rearLeft.angle + frc::Rotation2d(0.0_deg);
+  // rearRight.angle = rearRight.angle + frc::Rotation2d(100.0_deg);
+
+  frc::SmartDashboard::PutNumber("frontLeft.GetTurningPosition()",double(m_frontLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()",double(m_frontRightSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearLeft.GetTurningPosition()",double(m_rearLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()",double(m_rearRightSwerveModule->GetTurningPosition()));
+
   // To avoid brownout, reduce power when wheels are too far out of position.
   const units::angle::degree_t frontLeftTurningError = m_frontLeftSwerveModule->GetTurningPosition() - frontLeft.angle.Degrees();
   const units::angle::degree_t frontRightTurningError = m_frontRightSwerveModule->GetTurningPosition() - frontRight.angle.Degrees();
@@ -1072,6 +1109,14 @@ void DriveSubsystem::SetModuleStates(std::array<frc::SwerveModuleState, 4> &desi
   m_rearRightSwerveModule->SetDesiredState(rearRight);
 }
 
+void DriveSubsystem::OutputWheelPositions()
+{
+  frc::SmartDashboard::PutNumber("frontLeft.GetTurningPosition()", double(m_frontLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()", double(m_frontRightSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearLeft.GetTurningPosition()", double(m_rearLeftSwerveModule->GetTurningPosition()));
+  frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()", double(m_rearRightSwerveModule->GetTurningPosition()));
+}
+
 units::degree_t DriveSubsystem::GetHeading() noexcept
 {
   units::degree_t heading{0.0};
@@ -1094,6 +1139,8 @@ void DriveSubsystem::ZeroHeading() noexcept
     {
       m_ahrs->ZeroYaw();
     } });
+
+    targetRot = frc::Rotation2d(0.0_deg);
 }
 
 double DriveSubsystem::GetTurnRate() noexcept

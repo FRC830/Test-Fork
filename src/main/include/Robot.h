@@ -9,16 +9,23 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
-#include "RobotContainer.h"
+#include <frc/GenericHID.h>
+#include <frc/XboxController.h>
+#include <frc2/command/RunCommand.h>
+
+#include "subsystems/DriveSubsystem.h"
+
+#include <memory>
+#include <tuple>
 
 class Robot : public frc::TimedRobot
 {
 public:
   void RobotInit() noexcept override;
   void RobotPeriodic() noexcept override;
-  void DisabledInit() noexcept override;
+  // void DisabledInit() noexcept override;
   void DisabledPeriodic() noexcept override;
-  void DisabledExit() noexcept override;
+  //void DisabledExit() noexcept override;
   void AutonomousInit() noexcept override;
   void AutonomousPeriodic() noexcept override;
   void AutonomousExit() noexcept override;
@@ -32,5 +39,20 @@ public:
 private:
   std::optional<frc2::CommandPtr> m_autonomousCommand;
 
-  RobotContainer m_container;
+  std::tuple<double, double, double, bool> GetDriveTeleopControls() noexcept;
+
+  void ConfigureButtonBindings() noexcept;
+
+  bool m_fieldOriented{false};
+  bool m_lock{false};
+  bool m_slow{false};
+
+  // The robot's subsystems and commands are defined here...
+  DriveSubsystem m_driveSubsystem;
+
+  std::unique_ptr<frc2::RunCommand> m_driveCommand;
+  std::unique_ptr<frc2::RunCommand> m_pointCommand;
+  
+  frc::XboxController m_xbox{0};
+  frc::GenericHID m_buttonBoard{1};
 };

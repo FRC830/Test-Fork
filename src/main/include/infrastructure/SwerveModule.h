@@ -1,10 +1,17 @@
 #pragma once
 
 #include "Constants.h"
+<<<<<<< HEAD:src/main/include/infrastructure/SwerveModule.h
 #include "infrastructure/PWMAngleSensor.h"
 #include "infrastructure/ShuffleboardWidgets.h"
 #include "infrastructure/SmartMotor.h"
 #include "infrastructure/SparkMax.h"
+=======
+#include "subsystems/SmartMotor.h"
+#include "subsystems/SparkMax.h"
+>>>>>>> 7ab74c379b7679a51ec671239f043571bc2d693f:src/main/include/subsystems/SwerveModule.h
+
+#include <CTRE/phoenix/sensors/CANCoder.h>
 
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/kinematics/SwerveModulePosition.h>
@@ -161,6 +168,8 @@ public:
   // Note that the latter condition is only checked in test mode.
   bool GetStatus() const noexcept;
 
+  int encoderAlignmentOffset;
+
   // Set motor controller turning position using absolute position sensor (best
   // done when robot is at rest).
   void ResetTurning() noexcept;
@@ -310,7 +319,7 @@ private:
   double m_driveVelocity_V{pidf::kDriveVelocityMaxAcceleration};
   double m_driveVelocity_A{pidf::kDriveVelocityMaxJerk};
 
-  std::unique_ptr<AngleSensor> m_turningPositionPWM;
+  std::unique_ptr<ctre::phoenix::sensors::CANCoder> m_turningPositionPWM;
 
   std::unique_ptr<SmartMotorBase> m_turningMotorBase;
   std::unique_ptr<SmartMotor<units::angle::degrees>> m_turningMotor;

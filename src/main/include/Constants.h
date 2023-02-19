@@ -10,10 +10,10 @@ namespace physical
 {
     // Alignment constants, for each swerve module.  Specified on [-2048, 2048)
     // "count" scale, in (dimensionless) angular units.
-    constexpr int kFrontLeftAlignmentOffset = +2064;
-    constexpr int kFrontRightAlignmentOffset = +445;
-    constexpr int kRearLeftAlignmentOffset = -16;
-    constexpr int kRearRightAlignmentOffset = -201;
+    constexpr int kFrontLeftAlignmentOffset = -332;
+    constexpr int kFrontRightAlignmentOffset = -296;
+    constexpr int kRearLeftAlignmentOffset = -195;
+    constexpr int kRearRightAlignmentOffset = -154;
 
     // SDS Mk3 Standard (or Fast) Gear Ratio: 8.16:1 (or 6.86:1);
     // Nominal Wheel Diameter (4"): =0.1016m;
@@ -59,22 +59,22 @@ namespace physical
 
     // Drivebase geometry: distance between centers of right and left wheels on
     // robot; distance between centers of front and back wheels on robot.
-    constexpr units::meter_t kTrackWidth = 22.5_in;
-    constexpr units::meter_t kWheelBase = 22.5_in;
+    constexpr units::meter_t kTrackWidth = 18.0_in;
+    constexpr units::meter_t kWheelBase = 17.5_in;
 
     // CAN ID and Digital I/O Port assignments.
-    constexpr int kFrontLeftTurningMotorCanID = 1;
-    constexpr int kFrontLeftDriveMotorCanID = 2;
-    constexpr int kFrontRightTurningMotorCanID = 3;
-    constexpr int kFrontRightDriveMotorCanID = 4;
-    constexpr int kRearLeftTurningMotorCanID = 5;
-    constexpr int kRearLeftDriveMotorCanID = 6;
-    constexpr int kRearRightTurningMotorCanID = 7;
+    constexpr int kFrontLeftTurningMotorCanID = 2;
+    constexpr int kFrontLeftDriveMotorCanID = 6;
+    constexpr int kFrontRightTurningMotorCanID = 1;
+    constexpr int kFrontRightDriveMotorCanID = 5;
+    constexpr int kRearLeftTurningMotorCanID = 3;
+    constexpr int kRearLeftDriveMotorCanID = 7;
+    constexpr int kRearRightTurningMotorCanID = 4;
     constexpr int kRearRightDriveMotorCanID = 8;
-    constexpr int kFrontLeftTurningEncoderPort = 0;
-    constexpr int kFrontRightTurningEncoderPort = 1;
-    constexpr int kRearLeftTurningEncoderPort = 2;
-    constexpr int kRearRightTurningEncoderPort = 3;
+    constexpr int kFrontLeftTurningEncoderPort = 22;
+    constexpr int kFrontRightTurningEncoderPort = 21;
+    constexpr int kRearLeftTurningEncoderPort = 23;
+    constexpr int kRearRightTurningEncoderPort = 24;
 
     // These can flip because of gearing.
     constexpr bool kDriveMotorInverted = false;
@@ -90,7 +90,7 @@ namespace pidf
 {
     constexpr units::degrees_per_second_t kTurningPositionMaxVelocity = 2750.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kTurningPositionMaxAcceleration = 20000.0_deg_per_s_sq;
-    constexpr double kTurningPositionP = 0.006;
+    constexpr double kTurningPositionP = 0.004;
     constexpr double kTurningPositionF = 0.003;
     constexpr double kTurningPositionI = 0.0;
     constexpr double kTurningPositionIZ = 0.0;
@@ -121,11 +121,16 @@ namespace pidf
 
     constexpr units::degrees_per_second_t kDriveThetaMaxVelocity = 45.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kDriveThetaMaxAcceleration = 450.0_deg_per_s_sq;
-    constexpr double kDriveThetaP = 0.10;
-    constexpr double kDriveThetaF = 0.005;
-    constexpr double kDriveThetaI = 0.0;
+    constexpr double kDriveThetaP = 0.0;
+    constexpr double kDriveThetaF = 0.00;
+    constexpr double kDriveThetaI = 0.00;
     constexpr double kDriveThetaD = 0.0;
 }
+//     constexpr double kDriveThetaP = 0.30;
+//     constexpr double kDriveThetaF = 0.005;
+//     constexpr double kDriveThetaI = 0.0025;
+//     constexpr double kDriveThetaD = 0.0;
+// }
 
 namespace nonDrive
 {
