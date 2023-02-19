@@ -1,15 +1,8 @@
 #pragma once
 
 #include "Constants.h"
-<<<<<<< HEAD:src/main/include/infrastructure/SwerveModule.h
-#include "infrastructure/PWMAngleSensor.h"
-#include "infrastructure/ShuffleboardWidgets.h"
 #include "infrastructure/SmartMotor.h"
 #include "infrastructure/SparkMax.h"
-=======
-#include "subsystems/SmartMotor.h"
-#include "subsystems/SparkMax.h"
->>>>>>> 7ab74c379b7679a51ec671239f043571bc2d693f:src/main/include/subsystems/SwerveModule.h
 
 #include <CTRE/phoenix/sensors/CANCoder.h>
 
