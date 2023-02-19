@@ -429,12 +429,16 @@ const frc::SwerveModuleState SwerveModule::GetState() noexcept
     return result;
 }
 
-#if 0 // XXX
 const frc::SwerveModulePosition SwerveModule::GetPosition() noexcept
 {
-    return {m_driveMotor->GetPosition(), m_turningMotor->GetPosition()};
+    frc::SwerveModulePosition result;
+
+    result.angle = frc::Rotation2d(GetTurningPosition());
+    result.distance = GetDriveDistance();
+
+    return result;
 }
-#endif
+
 
 void SwerveModule::SetDesiredState(const frc::SwerveModuleState &referenceState) noexcept
 {

@@ -1,7 +1,11 @@
-#include "subsystems/DriveSubsystem.h"
+
 #include "subsystems/SwerveModule.h"
+#include "subsystems/DriveSubsystem.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
+
+
+#include <frc/kinematics/SwerveDriveOdometry.h>
 
 #include <frc/DataLogManager.h>
 #include <frc/shuffleboard/BuiltInWidgets.h>
@@ -14,7 +18,8 @@
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
-#include <wpi/span.h> // XXX  #include <span>
+#include <wpi/array.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 
 #include <algorithm>
 #include <chrono>
@@ -80,7 +85,8 @@ DriveSubsystem::DriveSubsystem() noexcept
 
   // Initial position (third parameter) defaulted to "frc::Pose2d()"; initial
   // angle (second parameter) is automatically zeroed by navX initialization.
-  m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, 0.0_deg);
+  //m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, botRot, 0.0_deg, GetModulePositions(), );
+  m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, GetHeading(), GetModulePositions());
 
   // These are last, so there can be no movement from the swerve modules.
   m_frontLeftSwerveModule = std::make_unique<SwerveModule>(
@@ -110,6 +116,10 @@ DriveSubsystem::DriveSubsystem() noexcept
       physical::kRearRightTurningMotorCanID,
       physical::kRearRightTurningEncoderPort,
       physical::kRearRightAlignmentOffset);
+
+      // Initial position (third parameter) defaulted to "frc::Pose2d()"; initial
+  // angle (second parameter) is automatically zeroed by navX initialization.
+  m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, GetHeading(), GetModulePositions());
 }
 
 void DriveSubsystem::DoSafeIMU(const char *const what, std::function<void()> work) noexcept
@@ -130,6 +140,15 @@ void DriveSubsystem::DoSafeIMU(const char *const what, std::function<void()> wor
 
     std::printf("navX IMU %s unknown exception.\n", what);
   }
+}
+
+std::array<frc::SwerveModulePosition, 4> DriveSubsystem::GetModulePositions() noexcept
+{
+  return {
+      m_frontLeftSwerveModule->GetPosition(),
+      m_frontRightSwerveModule->GetPosition(),
+      m_rearLeftSwerveModule->GetPosition(),
+      m_rearRightSwerveModule->GetPosition()};
 }
 
 void DriveSubsystem::Periodic() noexcept
@@ -183,10 +202,12 @@ void DriveSubsystem::Periodic() noexcept
   m_theta = theta;
   frc::SmartDashboard::PutNumber("turning error theta", (double)theta);
 
-  m_odometry->Update(botRot, m_frontLeftSwerveModule->GetState(),
-                     m_frontRightSwerveModule->GetState(), m_rearLeftSwerveModule->GetState(),
-                     m_rearRightSwerveModule->GetState());
-  frc::SmartDashboard::PutNumber("odorot", double(m_odometry->GetPose().Rotation().Degrees()));
+  // const wpi::array<frc::SwerveModulePosition, 4> states = {m_frontLeftSwerveModule->GetState(),
+  //                    m_frontRightSwerveModule->GetState(), m_rearLeftSwerveModule->GetState(),
+  //                    m_rearRightSwerveModule->GetState()}
+
+  m_odometry->Update(botRot, GetModulePositions());
+  frc::SmartDashboard::PutNumber("odorot", double(GetPose().Rotation().Degrees()));
   frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().X()));
   
   frc::SmartDashboard::PutNumber("odotrans", double(m_odometry->GetPose().Translation().Y()));
@@ -205,7 +226,7 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) noexcept
       botRot = -m_ahrs->GetRotation2d();
     } });
 
-  m_odometry->ResetPosition(pose, botRot);
+  m_odometry->ResetPosition(botRot, GetModulePositions(), pose);
 }
 
 bool DriveSubsystem::GetStatus() const noexcept

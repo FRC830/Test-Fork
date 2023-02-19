@@ -4,31 +4,36 @@
 
 #pragma once
 
-#include "Constants.h"
 #include "subsystems/SwerveModule.h"
+
+#include "Constants.h"
 
 #include <AHRS.h>
 #include <frc/controller/ProfiledPIDController.h>
-#include <frc/geometry/Pose2d.h>
-#include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Translation2d.h>
+#include <frc/geometry/Pose2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
+#include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/shuffleboard/ComplexWidget.h>
 #include <frc/shuffleboard/SimpleWidget.h>
 #include <frc/smartdashboard/SendableChooser.h>
-#include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/length.h>
 #include <units/velocity.h>
-#include <wpi/array.h>
 #include <wpi/DataLog.h>
 #include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableHelper.h>
+
+#include <array>
+#include <functional>
+#include <memory>
+#include <optional>
 
 #include <memory>
 
@@ -45,8 +50,7 @@ public:
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
-  void Periodic() noexcept override;
-
+  void Periodic() noexcept;
   void TestInit() noexcept;
   void TestExit() noexcept;
   void TestPeriodic() noexcept;
@@ -57,7 +61,6 @@ public:
   // Valid and unchanging, from return of TestInit() through destruction of
   // the associated DriveSubsystem().  This provides a way to inject Commands
   // into Test Mode, interactively.  If nullptr, TestInit() was never called.
-  frc::SendableChooser<frc2::Command *> *TestModeChooser() noexcept { return m_chooser.get(); }
 
   // Obtain status of the overall swerve drive subsystem.
   bool GetStatus() const noexcept;
@@ -95,6 +98,8 @@ public:
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative, units::meter_t x_center, units::meter_t y_center) noexcept;
+
+  std::array<frc::SwerveModulePosition, 4> GetModulePositions() noexcept;
 
   /**
    * Resets the drive encoder to zero, and the turning encoder based on the
@@ -163,6 +168,8 @@ public:
 
   void ClearFaults() noexcept;
 
+  //frc::SmartDashboard dashboard = frc::SmartDashboard::SmartDashboard();
+
   // Front: +x, Rear: -x; Left: +y, Right -y.  Zero heading is to the front
   // and +rotation is counter-clockwise.  This is all standard, although it
   // means the robot's front is along the x-axis, which is often pointed to
@@ -219,10 +226,6 @@ private:
   double m_maxProcessFirstDerivative{0.0};
   double m_minProcessSecondDerivative{0.0};
   double m_maxProcessSecondDerivative{0.0};
-
-  // Test Mode (only) instance of test command chooser.
-  std::unique_ptr<frc::SendableChooser<frc2::Command *>> m_chooser;
-  frc2::Command *m_command{nullptr};
 
   // Last commanded drive inputs, for Test Mode display.
   double m_rotation{0.0};
