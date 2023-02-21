@@ -86,7 +86,6 @@ DriveSubsystem::DriveSubsystem() noexcept
   // Initial position (third parameter) defaulted to "frc::Pose2d()"; initial
   // angle (second parameter) is automatically zeroed by navX initialization.
   //m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, botRot, 0.0_deg, GetModulePositions(), );
-  m_odometry = std::make_unique<frc::SwerveDriveOdometry<4>>(kDriveKinematics, GetHeading(), GetModulePositions());
 
   // These are last, so there can be no movement from the swerve modules.
   m_frontLeftSwerveModule = std::make_unique<SwerveModule>(

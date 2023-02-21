@@ -65,7 +65,7 @@ SwerveModule::SwerveModule(
     // required by the `DutyCycle` ctor.  Nothing here is expected to fail.
     // Note this has no explicit SetInverted() method; flip the turning motor
     // and it's incremental encoder in order to make things work out/line up.
-    m_turningPositionPWM = std::make_unique<ctre::phoenix::sensors::CANCoder>(turningEncoderPort);
+    m_turningPositionPWM = std::make_unique<frc::AnalogEncoder>(turningEncoderPort);
     encoderAlignmentOffset = alignmentOffset;
 
     // Motor controller configurations are only checked (or saved) in test mode
@@ -263,13 +263,12 @@ units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 
     if (position.has_value())
     {
-        std::cout << "has value" << std::endl;
         m_turningPosition = position.value();
 
         return m_turningPosition;
     }
     else{
-        std::cout << "does not have value" << std::endl;
+        //std::cout << "does not have value" << std::endl;
     }
 
     

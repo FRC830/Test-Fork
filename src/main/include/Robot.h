@@ -10,6 +10,7 @@
 #include <frc/GenericHID.h>
 #include <frc/XboxController.h>
 #include <frc2/command/RunCommand.h>
+#include <frc/AnalogEncoder.h>
 
 #include "subsystems/DriveSubsystem.h"
 

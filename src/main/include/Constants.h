@@ -84,10 +84,10 @@ namespace physical
     constexpr int kRearLeftDriveMotorCanID = 7;
     constexpr int kRearRightTurningMotorCanID = 4;
     constexpr int kRearRightDriveMotorCanID = 8;
-    constexpr int kFrontLeftTurningEncoderPort = 22;
-    constexpr int kFrontRightTurningEncoderPort = 21;
-    constexpr int kRearLeftTurningEncoderPort = 23;
-    constexpr int kRearRightTurningEncoderPort = 24;
+    constexpr int kFrontLeftTurningEncoderPort = 1;
+    constexpr int kFrontRightTurningEncoderPort = 0;
+    constexpr int kRearLeftTurningEncoderPort = 2;
+    constexpr int kRearRightTurningEncoderPort = 3;
 
     // These can flip because of gearing.
     constexpr bool kDriveMotorInverted = false;

@@ -4,7 +4,7 @@
 #include "subsystems/SmartMotor.h"
 #include "subsystems/SparkMax.h"
 
-#include <CTRE/phoenix/sensors/CANCoder.h>
+#include <frc/AnalogEncoder.h>
 
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/kinematics/SwerveModulePosition.h>
@@ -312,7 +312,7 @@ private:
   double m_driveVelocity_V{pidf::kDriveVelocityMaxAcceleration};
   double m_driveVelocity_A{pidf::kDriveVelocityMaxJerk};
 
-  std::unique_ptr<ctre::phoenix::sensors::CANCoder> m_turningPositionPWM;
+  std::unique_ptr<frc::AnalogEncoder> m_turningPositionPWM;
 
   std::unique_ptr<SmartMotorBase> m_turningMotorBase;
   std::unique_ptr<SmartMotor<units::angle::degrees>> m_turningMotor;
