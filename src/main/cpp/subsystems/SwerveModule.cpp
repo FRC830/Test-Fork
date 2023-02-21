@@ -234,7 +234,7 @@ void SwerveModule::Periodic() noexcept
 
 void SwerveModule::ResetTurning() noexcept
 {
-    const std::optional<units::angle::degree_t> position = units::degree_t(m_turningPositionPWM->GetAbsolutePosition() + encoderAlignmentOffset);
+    const std::optional<units::angle::degree_t> position = units::degree_t(360*m_turningPositionPWM->GetAbsolutePosition() + encoderAlignmentOffset);
 
     // If absolute position isn't available, there's no basis for resetting and
     // it's better to just let any old data stand.  This is when manual
@@ -259,7 +259,7 @@ void SwerveModule::ResetDrive() noexcept
 
 units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 {
-    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  m_turningPositionPWM->GetAbsolutePosition());
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  360*m_turningPositionPWM->GetAbsolutePosition());
 
     if (position.has_value())
     {
@@ -444,7 +444,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState &referenceState)
     // Optimize the reference state, to avoid spinning further than 90 degrees.
     frc::SwerveModuleState state = referenceState;
 
-    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  m_turningPositionPWM->GetAbsolutePosition());
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  360*m_turningPositionPWM->GetAbsolutePosition());
 
     if (position.has_value())
     {
@@ -512,7 +512,7 @@ void SwerveModule::TestPeriodic() noexcept
 
     // [-2048, +2048)
     //this one should not be adjusted based on the encoderalighnmentoffset
-    std::optional<int> position = (int)(m_turningPositionPWM->GetAbsolutePosition());
+    std::optional<int> position = (int)(360*m_turningPositionPWM->GetAbsolutePosition());
 
     // This provides a rough means of zeroing the turning position.
     if (position.has_value())
