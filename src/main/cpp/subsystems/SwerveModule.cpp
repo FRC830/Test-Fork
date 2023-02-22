@@ -259,7 +259,7 @@ void SwerveModule::ResetDrive() noexcept
 
 units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 {
-    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  360*m_turningPositionPWM->GetAbsolutePosition());
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  (int)(360*m_turningPositionPWM->GetAbsolutePosition()));
 
     if (position.has_value())
     {
