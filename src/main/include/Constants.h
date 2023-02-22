@@ -111,7 +111,7 @@ namespace pidf
 {
     constexpr units::degrees_per_second_t kTurningPositionMaxVelocity = /*27*/50.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kTurningPositionMaxAcceleration = 20000.0_deg_per_s_sq;
-    constexpr double kTurningPositionP = 0.0004;
+    constexpr double kTurningPositionP = 0.0002;
     constexpr double kTurningPositionF = 0.003;
     constexpr double kTurningPositionI = 0.0;
     constexpr double kTurningPositionIZ = 0.0;
@@ -142,7 +142,7 @@ namespace pidf
 
     constexpr units::degrees_per_second_t kDriveThetaMaxVelocity = 45.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kDriveThetaMaxAcceleration = 450.0_deg_per_s_sq;
-    constexpr double kDriveThetaP = 1.0;
+    constexpr double kDriveThetaP = 0.2;
     constexpr double kDriveThetaF = 0.005;
     constexpr double kDriveThetaI = 0.00;
     constexpr double kDriveThetaD = 0.0;
