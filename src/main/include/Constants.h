@@ -23,10 +23,18 @@ namespace physical
 {
     // Alignment constants, for each swerve module.  Specified on [-2048, 2048)
     // "count" scale, in (dimensionless) angular units.
-    constexpr int kFrontLeftAlignmentOffset = -332;
-    constexpr int kFrontRightAlignmentOffset = -296;
-    constexpr int kRearLeftAlignmentOffset = -195;
-    constexpr int kRearRightAlignmentOffset = -154;
+    // int kFrontLeftAlignmentOffset = -332;
+    // int kFrontRightAlignmentOffset = -296;
+    // int kRearLeftAlignmentOffset = -195;
+    // int kRearRightAlignmentOffset = -154;
+    extern int kFrontLeftAlignmentOffset;
+    extern int kFrontRightAlignmentOffset;
+    extern int kRearLeftAlignmentOffset;
+    extern int kRearRightAlignmentOffset;
+    static constexpr std::string_view kFrontLeftAlignmentOffsetKey = "FrontLeftAlignmentOffset";
+    static constexpr std::string_view kFrontRightAlignmentOffsetKey = "FrontRightAlignmentOffset";
+    static constexpr std::string_view kRearLeftAlignmentOffsetKey = "RearLeftAlignmentOffset";
+    static constexpr std::string_view kRearRightAlignmentOffsetKey = "RearRightAlignmentOffset";
 
     // swervex Standard (or Fast) Gear Ratio: 5.5:1 (or 6.86:1);
     // Nominal Wheel Diameter (3.5"): =0.0889m;
@@ -134,8 +142,8 @@ namespace pidf
 
     constexpr units::degrees_per_second_t kDriveThetaMaxVelocity = 45.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kDriveThetaMaxAcceleration = 450.0_deg_per_s_sq;
-    constexpr double kDriveThetaP = 0.0;
-    constexpr double kDriveThetaF = 0.00;
+    constexpr double kDriveThetaP = 0.1;
+    constexpr double kDriveThetaF = 0.005;
     constexpr double kDriveThetaI = 0.00;
     constexpr double kDriveThetaD = 0.0;
 }
