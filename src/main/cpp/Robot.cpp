@@ -123,6 +123,12 @@ void Robot::RobotPeriodic() noexcept
   frc::SmartDashboard::PutNumber("Back Left Drive Position", double(m_driveSubsystem.m_rearLeftSwerveModule->GetDriveVelocity()));
   frc::SmartDashboard::PutNumber("Back Right Drive Position", double(m_driveSubsystem.m_rearRightSwerveModule->GetDriveVelocity()));
 
+  
+  frc::SmartDashboard::PutNumber("Front Left Target PID", double(m_driveSubsystem.m_frontLeftSwerveModule->m_rioPIDController->GetSetpoint().position));
+  frc::SmartDashboard::PutNumber("Front Right Target PID", double(m_driveSubsystem.m_frontRightSwerveModule->m_rioPIDController->GetSetpoint().position));
+  frc::SmartDashboard::PutNumber("Back Left Target PID", double(m_driveSubsystem.m_rearLeftSwerveModule->m_rioPIDController->GetSetpoint().position));
+  frc::SmartDashboard::PutNumber("Back Right Target PID", double(m_driveSubsystem.m_rearRightSwerveModule->m_rioPIDController->GetSetpoint().position));
+
   m_driveSubsystem.OutputWheelPositions();
   
   if (frc::SmartDashboard::GetNumber("0 if realign", 1) == 0)

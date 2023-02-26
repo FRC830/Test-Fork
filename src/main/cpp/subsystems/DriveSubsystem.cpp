@@ -76,7 +76,7 @@ DriveSubsystem::DriveSubsystem() noexcept
           pidf::kDriveThetaMaxVelocity,
           pidf::kDriveThetaMaxAcceleration}));
 
-  m_orientationController->EnableContinuousInput(-180.0_deg, +180.0_deg);
+  m_orientationController->EnableContinuousInput(0.0_deg, +360.0_deg);
 
   // This is precomputed and used in cases where there is close to a 180 degree
   // error; needed to get things moving in some cases (rotate 180 degrees).
@@ -464,8 +464,16 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   kDriveKinematics.DesaturateWheelSpeeds(&states, physical::kMaxDriveSpeed);
 
   m_orientationController->SetGoal(targetRot.Degrees());
-
+  
   SetModuleStates(states);
+
+  auto [frontLeft, frontRight, rearLeft, rearRight] = states;
+
+  frc::SmartDashboard::PutNumber("frontLeft state",double(frontLeft.angle.Degrees()));
+  frc::SmartDashboard::PutNumber("frontRight state",double(frontRight.angle.Degrees()));
+  frc::SmartDashboard::PutNumber("rearLeft state",double(rearLeft.angle.Degrees()));
+  frc::SmartDashboard::PutNumber("rearRight state",double(rearRight.angle.Degrees()));
+
 }
 
 void DriveSubsystem::ResetEncoders() noexcept
@@ -519,6 +527,8 @@ void DriveSubsystem::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> &desi
   frc::SmartDashboard::PutNumber("frontRight.GetTurningPosition()",double(m_frontRightSwerveModule->GetTurningPosition()));
   frc::SmartDashboard::PutNumber("rearLeft.GetTurningPosition()",double(m_rearLeftSwerveModule->GetTurningPosition()));
   frc::SmartDashboard::PutNumber("rearRight.GetTurningPosition()",double(m_rearRightSwerveModule->GetTurningPosition()));
+
+  
 
   // To avoid brownout, reduce power when wheels are too far out of position.
   const units::angle::degree_t frontLeftTurningError = m_frontLeftSwerveModule->GetTurningPosition() - frontLeft.angle.Degrees();

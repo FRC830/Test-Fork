@@ -20,6 +20,7 @@
 #include <frc/shuffleboard/ShuffleboardLayout.h>
 #include <frc/shuffleboard/ShuffleboardTab.h>
 #include <frc/shuffleboard/SimpleWidget.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTableValue.h>
 #include <units/voltage.h>
 #include <wpi/StringMap.h>
@@ -59,7 +60,7 @@ SwerveModule::SwerveModule(
             pidf::kTurningPositionMaxVelocity,
             pidf::kTurningPositionMaxAcceleration}));
 
-    m_rioPIDController->EnableContinuousInput(-180.0_deg, +180.0_deg);
+    m_rioPIDController->EnableContinuousInput(0.0_deg, +360.0_deg);
 
     // Construct turning absolute duty cycle encoder.  A `DigitalSource` is
     // required by the `DutyCycle` ctor.  Nothing here is expected to fail.
@@ -234,7 +235,7 @@ void SwerveModule::Periodic() noexcept
 
 void SwerveModule::ResetTurning() noexcept
 {
-    const std::optional<units::angle::degree_t> position = units::degree_t(360*m_turningPositionPWM->GetAbsolutePosition() + encoderAlignmentOffset);
+    const std::optional<units::angle::degree_t> position = units::degree_t(360*(m_turningPositionPWM->GetAbsolutePosition() - m_turningPositionPWM->GetPositionOffset()) + encoderAlignmentOffset);
 
     // If absolute position isn't available, there's no basis for resetting and
     // it's better to just let any old data stand.  This is when manual
@@ -259,7 +260,7 @@ void SwerveModule::ResetDrive() noexcept
 
 units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
 {
-    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  (int)(360*m_turningPositionPWM->GetAbsolutePosition()));
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  (int)(360*(m_turningPositionPWM->GetAbsolutePosition() - m_turningPositionPWM->GetPositionOffset())));
 
     if (position.has_value())
     {
@@ -281,11 +282,11 @@ units::angle::degree_t SwerveModule::GetTurningPosition() noexcept
     // the best that can be done here.
     units::angle::degree_t encoderPosition = m_turningMotor->GetPosition();
 
-    while (encoderPosition < 180.0_deg)
+    while (encoderPosition < 0.0_deg)
     {
         encoderPosition += 360.0_deg;
     }
-    while (encoderPosition >= 180.0_deg)
+    while (encoderPosition >= 360.0_deg)
     {
         encoderPosition -= 360.0_deg;
     }
@@ -302,18 +303,21 @@ void SwerveModule::SetTurningPosition(const units::angle::degree_t position) noe
     // Defensive coding; could use fmod(adjustedPosition, 360_deg) here, except
     // this would still require some logic because of sign and should never run
     // in any case.
-    while (adjustedPosition < -180.0_deg)
-    {
-        adjustedPosition += 360.0_deg;
-    }
-    while (adjustedPosition >= +180.0_deg)
-    {
-        adjustedPosition -= 360.0_deg;
-    }
+    // while (adjustedPosition < -0.0_deg)
+    // {
+    //     adjustedPosition += 360.0_deg;
+    // }
+    // while (adjustedPosition >= +360.0_deg)
+    // {
+    //     adjustedPosition -= 360.0_deg;
+    // }
 
     m_commandedHeading = adjustedPosition;
 
     m_rioPIDController->SetGoal(adjustedPosition);
+
+    // std::cout << __FUNCTION__ << std::endl;
+    frc::SmartDashboard::PutNumber(m_name + " adjustedPosition", adjustedPosition.value());
 
     if (m_rio || m_testModeControl || m_testModeTurningVoltage != 0.0)
     {
@@ -444,7 +448,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState &referenceState)
     // Optimize the reference state, to avoid spinning further than 90 degrees.
     frc::SwerveModuleState state = referenceState;
 
-    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  360*m_turningPositionPWM->GetAbsolutePosition());
+    const std::optional<units::angle::degree_t> position = units::degree_t(encoderAlignmentOffset +  360*(m_turningPositionPWM->GetAbsolutePosition() - m_turningPositionPWM->GetPositionOffset()));
 
     if (position.has_value())
     {
@@ -512,7 +516,7 @@ void SwerveModule::TestPeriodic() noexcept
 
     // [-2048, +2048)
     //this one should not be adjusted based on the encoderalighnmentoffset
-    std::optional<int> position = (int)(360*m_turningPositionPWM->GetAbsolutePosition());
+    std::optional<int> position = (int)(360*(m_turningPositionPWM->GetAbsolutePosition()- m_turningPositionPWM->GetPositionOffset()));
 
     // This provides a rough means of zeroing the turning position.
     if (position.has_value())

@@ -99,7 +99,7 @@ namespace physical
 
     // These can flip because of gearing.
     constexpr bool kDriveMotorInverted = false;
-    constexpr bool kTurningMotorInverted = false;
+    constexpr bool kTurningMotorInverted = true;
 }
 
 namespace firmware
@@ -111,9 +111,9 @@ namespace pidf
 {
     constexpr units::degrees_per_second_t kTurningPositionMaxVelocity = /*27*/50.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kTurningPositionMaxAcceleration = 20000.0_deg_per_s_sq;
-    constexpr double kTurningPositionP = 0.0002;
-    constexpr double kTurningPositionF = 0.003;
-    constexpr double kTurningPositionI = 0.0;
+    constexpr double kTurningPositionP = 0.008;
+    constexpr double kTurningPositionF = 0.006;
+    constexpr double kTurningPositionI = 0.00;
     constexpr double kTurningPositionIZ = 0.0;
     constexpr double kTurningPositionIM = 0.0;
     constexpr double kTurningPositionD = 0.0;
