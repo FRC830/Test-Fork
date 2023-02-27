@@ -50,7 +50,7 @@ namespace physical
     // This is an upper bound, for various reasons.  It needs to be empirically
     // measured.  Half of theoretical free speed is a reasonable starting value
     // (since something in the ballpark is needed here in order to to drive).
-    constexpr units::meters_per_second_t kMaxDriveSpeed = 12.1_fps / 1.25;
+    constexpr units::meters_per_second_t kMaxDriveSpeed = 24_fps / 1.25;
 
     // For a square drive base, with +/-11.25" x/y coordinates for each of four
     // swerve modules, the radius of the circle going through all modules is:
@@ -109,10 +109,10 @@ namespace firmware
 
 namespace pidf
 {
-    constexpr units::degrees_per_second_t kTurningPositionMaxVelocity = /*27*/50.0_deg_per_s;
+    constexpr units::degrees_per_second_t kTurningPositionMaxVelocity = 2750.0_deg_per_s;
     constexpr units::degrees_per_second_squared_t kTurningPositionMaxAcceleration = 20000.0_deg_per_s_sq;
-    constexpr double kTurningPositionP = 0.008;
-    constexpr double kTurningPositionF = 0.006;
+    constexpr double kTurningPositionP = 0.006;
+    constexpr double kTurningPositionF = 0.003;
     constexpr double kTurningPositionI = 0.00;
     constexpr double kTurningPositionIZ = 0.0;
     constexpr double kTurningPositionIM = 0.0;
