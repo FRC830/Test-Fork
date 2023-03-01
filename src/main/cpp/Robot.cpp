@@ -134,17 +134,17 @@ void Robot::RobotPeriodic() noexcept
   if (frc::SmartDashboard::GetNumber("0 if realign", 1) == 0)
   {
     // Read from the preferences and set the alignment offests to those values
-    physical::kFrontLeftAlignmentOffset = frc::Preferences::GetDouble(physical::kFrontLeftAlignmentOffsetKey);
-    physical::kFrontRightAlignmentOffset = frc::Preferences::GetDouble(physical::kFrontRightAlignmentOffsetKey);
-    physical::kRearLeftAlignmentOffset = frc::Preferences::GetDouble(physical::kRearLeftAlignmentOffsetKey);
-    physical::kRearRightAlignmentOffset = frc::Preferences::GetDouble(physical::kRearRightAlignmentOffsetKey);
+    physical::kFrontLeftAlignmentOffset += -int(m_driveSubsystem.m_frontLeftSwerveModule->GetTurningPosition());
+    physical::kFrontRightAlignmentOffset += -int(m_driveSubsystem.m_frontRightSwerveModule->GetTurningPosition());
+    physical::kRearLeftAlignmentOffset += -int(m_driveSubsystem.m_rearLeftSwerveModule->GetTurningPosition());
+    physical::kRearRightAlignmentOffset += -int(m_driveSubsystem.m_rearRightSwerveModule->GetTurningPosition());
 
-    physical::kFrontLeftAlignmentOffset = frc::Preferences::GetDouble(physical::kFrontLeftAlignmentOffsetKey, physical::kFrontLeftAlignmentOffset);
-    physical::kFrontRightAlignmentOffset = frc::Preferences::GetDouble(physical::kFrontRightAlignmentOffsetKey, physical::kFrontRightAlignmentOffset);
-    physical::kRearLeftAlignmentOffset = frc::Preferences::GetDouble(physical::kRearLeftAlignmentOffsetKey, physical::kRearLeftAlignmentOffset);
-    physical::kRearRightAlignmentOffset = frc::Preferences::GetDouble(physical::kRearRightAlignmentOffsetKey, physical::kRearRightAlignmentOffset);
+    frc::Preferences::SetDouble(physical::kFrontLeftAlignmentOffsetKey, physical::kFrontLeftAlignmentOffset);
+    frc::Preferences::SetDouble(physical::kFrontRightAlignmentOffsetKey, physical::kFrontRightAlignmentOffset);
+    frc::Preferences::SetDouble(physical::kRearLeftAlignmentOffsetKey, physical::kRearLeftAlignmentOffset);
+    frc::Preferences::SetDouble(physical::kRearRightAlignmentOffsetKey, physical::kRearRightAlignmentOffset);
   
-    frc::SmartDashboard::GetNumber("0 if realign", 1);
+    frc::SmartDashboard::PutNumber("0 if realign", 1);
   }
   
   // frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
