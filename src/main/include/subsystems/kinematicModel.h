@@ -18,4 +18,14 @@ class kinematicModel
     
     void kinematicModel::calculateRobotNode();
     void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum);
+
+
+    double robotNodeDistance;
+    double robotAngleToNode;
+    double robotAngleToFaceNode;
+    double robotStrafeToNodeAngle;
+    double robotStrafeToFaceNodeX;
+    double robotStrafeToFaceNodeY;    
+
+    void kinematicModel::calculateRobotAngles();
 };
