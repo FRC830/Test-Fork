@@ -14,6 +14,8 @@
 
 #include "subsystems/DriveSubsystem.h"
 
+#include "../include/subsystems/Subsystems.h"
+
 #include <memory>
 #include <tuple>
 
@@ -50,6 +52,8 @@ private:
 
   // The robot's subsystems and commands are defined here...
   DriveSubsystem m_driveSubsystem;
+
+  Subsystems m_subsystems;
 
   std::unique_ptr<frc2::RunCommand> m_driveCommand;
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
