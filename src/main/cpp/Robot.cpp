@@ -63,7 +63,6 @@ void Robot::RobotInit() noexcept
 
   // Set up default drive command; non-owning pointer is passed by value.
   auto driveRequirements = {dynamic_cast<frc2::Subsystem *>(&m_driveSubsystem)};
-  auto subsystemRequirements = {dynamic_cast<frc2::Subsystem *>(&m_subsystems)};
 
 
   // Drive, as commanded by operator joystick controls.
@@ -86,8 +85,6 @@ void Robot::RobotInit() noexcept
             std::get<1>(controls) * physical::kMaxDriveSpeed,
             std::get<2>(controls) * physical::kMaxTurnRate,
             std::get<3>(controls));
-
-        m_subsystems.SetArmPIDF(pidf::kArmP, pidf::kArmI, pidf::kArmD, pidf::kArmF);
 
       },
       driveRequirements);
@@ -222,11 +219,6 @@ void Robot::ConfigureButtonBindings() noexcept
                                                                                                   { m_driveSubsystem.ZeroHeading();
                                                                                             m_fieldOriented = true; },
                                                                                                   {&m_driveSubsystem}));
-
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                    
-                                                                                                  {  },
-                                                                                                  {&m_subsystems}));
 
  
 

@@ -147,10 +147,10 @@ namespace pidf
     constexpr double kDriveThetaI = 0.00;
     constexpr double kDriveThetaD = 0.0;
 
-    double kArmP = 0.1;
-    double kArmI = 0.0;
-    double kArmD = 0.0;
-    double kArmF = 0.0;
+    extern double kArmP;
+    extern double kArmI;
+    extern double kArmD;
+    extern double kArmF;
 }
 //     constexpr double kDriveThetaP = 0.30;
 //     constexpr double kDriveThetaF = 0.005;

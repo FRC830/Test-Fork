@@ -1,6 +1,7 @@
 #include <Subsystems/kinematicModel.h>
 #include <cstdlib> //for abs value function
-#include <cmath>
+#include <math.h>
+// #include <cmath>
 
 // calculates the position of a node based on the XYZ given by the april tags
 void kinematicModel::calculateRobotNode() {
@@ -10,7 +11,6 @@ void kinematicModel::calculateRobotNode() {
 };
     
 void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum) {
-    int nodeColumn;
 
     double table[9]={22.125,0,-21.875,-43.875,-65.875,-87.875,-109.875,-131.875,-153.875};
     double distances[9]={0,0,0,0,0,0,0,0,0};
@@ -33,8 +33,8 @@ void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum) 
 
 // finds the angles required for the robot to strafe/rotate towards the node
 void kinematicModel::calculateRobotAngles() {
-    robotNodeDistance = cmath::hypot(robotNodeX, robotNodeY);
-    robotAngleToNode = cmath::atan(robotNodeY / robotNodeX);
+    robotNodeDistance = hypot(robotNodeX, robotNodeY);
+    robotAngleToNode = atan(robotNodeY / robotNodeX);
 
     // for rotate-then-strafe method
     // from here: robot_rotate(robotAprilTagYaw);
@@ -48,8 +48,8 @@ void kinematicModel::calculateRobotAngles() {
 
     // for strafe-only method
     robotStrafeToNodeAngle = robotAngleToNode - robotAprilTagYaw;
-    robotStrafeToFaceNodeX = robotNodeDistance * cmath::cos(StrafeToNodeAngle);
-    robotStrafeToFaceNodeY = robotNodeDistance * cmath::sin(StrafeToNodeAngle);
+    robotStrafeToFaceNodeX = robotNodeDistance * cos(robotStrafeToNodeAngle);
+    robotStrafeToFaceNodeY = robotNodeDistance * sin(robotStrafeToNodeAngle);
     // from here: robot_strafe(robotStrafeToFaceNodeX, 0);
     //            robot_arm_extend(robotStrafeToFaceNodeY);
 };
