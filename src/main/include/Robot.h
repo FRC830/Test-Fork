@@ -10,6 +10,8 @@
 #include <frc/GenericHID.h>
 #include <frc/XboxController.h>
 #include <frc2/command/RunCommand.h>
+#include <frc/event/BooleanEvent.h>
+
 #include <frc/AnalogEncoder.h>
 
 #include "subsystems/DriveSubsystem.h"
@@ -59,5 +61,6 @@ private:
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
   
   frc::XboxController m_xbox{0};
+  frc::EventLoop eventLoop;
   frc::GenericHID m_buttonBoard{1};
 };

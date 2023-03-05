@@ -1,8 +1,11 @@
 #include "../include/subsystems/Subsystems.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/controller/PIDController.h>
 
-
+Subsystems::Subsystems() : ArmPIDController (pidf::kArmP, pidf::kArmI, pidf::kArmD) 
+{
+}
 
 void Subsystems::SubsystemsInit()
 {
