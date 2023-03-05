@@ -24,3 +24,8 @@ Please see (and/or use) [shuffleboard.json](https://github.com/Jagwires7443/Swer
 ![alt text](https://github.com/Jagwires7443/Swerve/blob/master/TestMode1.PNG?raw=true)
 
 ![alt text](https://github.com/Jagwires7443/Swerve/blob/master/TestMode2.PNG?raw=true)
+
+
+
+##Vision ig
+  To update vision setting in terms of pipeline tuning data. Click export settings and wait for the download of the .zip file. Disconnect from the radio. connect to the radio conncted the new pi we want the setting to be on. Than click import setting and all that stuff
