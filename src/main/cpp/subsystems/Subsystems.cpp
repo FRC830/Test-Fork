@@ -9,12 +9,23 @@ Subsystems::Subsystems() : ArmPIDController (pidf::kArmP, pidf::kArmI, pidf::kAr
 
 void Subsystems::SubsystemsInit()
 {
-
+  frc::SmartDashboard::PutNumber("ArmPCoefficient", pidf::kArmP);
+  frc::SmartDashboard::PutNumber("ArmPAdder", 0);
+  frc::SmartDashboard::PutNumber("ArmI", pidf::kArmI);
+  frc::SmartDashboard::PutNumber("ArmD", pidf::kArmD);
 }
 
 void Subsystems::SubsystemsPeriodic()
 {
     ArmMotor.Set(ArmPIDController.Calculate(ArmMotorEncoder.GetPosition()));
+    SetArmPIDF
+    (
+        cos(ArmMotorEncoder.GetPosition()) *
+            frc::SmartDashboard::GetNumber("ArmPCoefficient", pidf::kArmP) +
+            frc::SmartDashboard::GetNumber("ArmPAdder", 0), 
+        frc::SmartDashboard::GetNumber("ArmI", pidf::kArmI), 
+        frc::SmartDashboard::GetNumber("ArmD", pidf::kArmD)
+    );
 }
 
 void Subsystems::SetGrabberWheels(bool direction)

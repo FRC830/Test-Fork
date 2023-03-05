@@ -94,6 +94,7 @@ void Robot::RobotInit() noexcept
       driveRequirements);
   
   m_subsystems.SubsystemsInit();
+
 }
 
 /**
@@ -152,6 +153,7 @@ void Robot::RobotPeriodic() noexcept
   eventLoop.Poll();
 
   m_subsystems.SubsystemsPeriodic();
+  //m_subsystems.SetArmPIDF(frc::SmartDashboard::PutNumber("ArmP", pidf::kArmP), frc::SmartDashboard::PutNumber("ArmI", pidf::kArmI), frc::SmartDashboard::PutNumber("ArmD", pidf::kArmD));
 }
 
 /**
