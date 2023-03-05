@@ -17,4 +17,13 @@ class kinematicModel
     
     void kinematicModel::calculateRobotNode();
 
+
+    double robotNodeDistance;
+    double robotAngleToNode;
+    double robotAngleToFaceNode;
+    double robotStrafeToNodeAngle;
+    double robotStrafeToFaceNodeX;
+    double robotStrafeToFaceNodeY;    
+
+    void kinematicModel::calculateRobotAngles();
 };
