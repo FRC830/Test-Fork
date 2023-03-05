@@ -2,7 +2,6 @@ class kinematicModel
 {
     public:
 
-     
     double robotAprilTagX=0;
     double robotAprilTagY=0;
     double robotAprilTagZ=0;
@@ -14,7 +13,9 @@ class kinematicModel
     double robotNodeX;
     double robotNodeY;
     double robotNodeZ;
+
+    int aprilTagNum;
     
     void kinematicModel::calculateRobotNode();
-
+    void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum);
 };
