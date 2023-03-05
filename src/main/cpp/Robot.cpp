@@ -88,7 +88,7 @@ void Robot::RobotInit() noexcept
             std::get<2>(controls) * physical::kMaxTurnRate,
             std::get<3>(controls));
 
-        m_subsystems.SetArmPIDF(pidf::kArmP, pidf::kArmI, pidf::kArmD, pidf::kArmF);
+        m_subsystems.SetArmPIDF(pidf::kArmP, pidf::kArmI, pidf::kArmD);
 
       },
       driveRequirements);
@@ -251,6 +251,14 @@ void Robot::ConfigureButtonBindings() noexcept
 
   m_xbox.POVUp(&eventLoop).IfHigh([&]() -> void  {m_lock = true;});
   m_xbox.POVDown(&eventLoop).IfHigh([&]() -> void  {m_lock = false;});
+
+  //telescope 
+
+  m_xbox.LeftBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy();});
+  m_xbox.RightBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.StopTelescope();});
+
+
+
   // m_xbox.POVLeft(&eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(false);});
   // m_xbox.POVRight(&eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(false);});
 

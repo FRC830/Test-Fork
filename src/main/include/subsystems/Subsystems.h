@@ -18,7 +18,9 @@ class Subsystems : public frc2::SubsystemBase
         void ToggleGrabberPnumatics ();
         void RotateArm(bool direction);
         
-        void SetArmPIDF (double p, double i, double d, double f);
+        void SetArmPIDF (double p, double i, double d);
+        void moveTelescopethingy();
+        void StopTelescope();
 
         void SubsystemsInit ();
         void SubsystemsPeriodic ();
@@ -30,6 +32,9 @@ class Subsystems : public frc2::SubsystemBase
         int MinArmAngle = 30;
         int MaxArmAngle = 250;
         int ArmAngleBufferSize = 20;
+
+        double telescopeEncoderCurrentPosition=0;
+        double telescopeEncoderMaxPosition=25;
         
         //Status Variables
         bool GrabberOnOff = false;
@@ -42,6 +47,11 @@ class Subsystems : public frc2::SubsystemBase
 
         rev::CANSparkMax GrabberWheelsMotor =  rev::CANSparkMax(10, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
 
-        rev::CANSparkMax ArmMotor = rev::CANSparkMax(10, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
+        rev::CANSparkMax ArmMotor = rev::CANSparkMax(11, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
         rev::SparkMaxRelativeEncoder ArmMotorEncoder = ArmMotor.GetEncoder();
+
+        rev::CANSparkMax TelescopeMotor = rev::CANSparkMax(12, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
+
+        
+
 };

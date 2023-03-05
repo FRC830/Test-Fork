@@ -61,6 +61,7 @@ private:
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
   
   frc::XboxController m_xbox{0};
+  frc::XboxController m_Copilot{1};
   frc::EventLoop eventLoop;
   frc::GenericHID m_buttonBoard{1};
 };
