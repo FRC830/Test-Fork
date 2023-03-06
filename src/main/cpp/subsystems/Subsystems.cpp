@@ -94,12 +94,28 @@ void Subsystems::moveTelescopethingy(bool direction)
 {
     auto setpoint = TelePIDController.GetSetpoint();
 
-    if (setpoint + TeleSpeed * direction < MaxArmAngle && setpoint +TeleSpeed * direction > MinArmAngle)//buffer could be applied here
+    if (setpoint + TeleSpeed * direction < MaxTeleAngle && setpoint +TeleSpeed * direction > MinTeleAngle)//buffer could be applied here
     {
        TelePIDController.SetSetpoint(setpoint +TeleSpeed);
     }
     else
     {
         std::cout << "Arm out of Bounds" << std::endl;
+    }
+}
+
+void Subsystems::SetArmPIDTarget(int target)
+{
+    if (target < MaxArmAngle && target > MinArmAngle)
+    {
+        ArmPIDController.SetSetpoint(target);
+    }
+}
+
+void Subsystems::SetTelePIDTarget(int target)
+{
+    if (target < MaxTeleAngle && target > MinTeleAngle)
+    {
+        TelePIDController.SetSetpoint(target);
     }
 }
