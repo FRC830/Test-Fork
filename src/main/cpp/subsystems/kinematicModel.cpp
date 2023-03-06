@@ -48,14 +48,44 @@ void kinematicModel::calculateRobotAngles() {
     //            robot_arm_extend(robotNodeY);
 
     // for rotate-only method
-    robotAngleToFaceNode = 90 + robotAprilTagYaw - robotAngleToNode;
+    /*robotAngleToFaceNode = 90 + robotAprilTagYaw - robotAngleToNode;*/
     // from here: robot_rotate(robotAngleToFaceNode);
     //            robot_arm_extend(robotNodeDistance);
 
     // for strafe-only method
-    robotStrafeToNodeAngle = robotAngleToNode - robotAprilTagYaw;
+    robotStrafeToNodeAngle = robotAngleToNode + robotAprilTagYaw;
     robotStrafeToFaceNodeX = robotNodeDistance * cos(robotStrafeToNodeAngle);
     robotStrafeToFaceNodeY = robotNodeDistance * sin(robotStrafeToNodeAngle);
+
+    nodeDist=robotStrafeToFaceNodeY;
     // from here: robot_strafe(robotStrafeToFaceNodeX, 0);
     //            robot_arm_extend(robotStrafeToFaceNodeY);
 };
+void kinematicModel::calculateArmPose(){
+    armAngleFromHorizon=atan(-robotNodeZ/ nodeDist);
+    armExtend=hypot(robotNodeZ, nodeDist);
+};
+
+void kinematicModel::calculateKinematics(int rowSelection){
+    double robotAprilTagX=0;
+    double robotAprilTagY=0;
+    double robotAprilTagZ=0;
+    double robotAprilTagYaw=0;
+    double nodeAprilTagX=0;
+    double nodeAprilTagY=0;
+    double nodeAprilTagZ=0;
+
+    //parse april tag
+    //get robot pivot location
+
+    getAprilTagPosOfSelectedNode(rowSelection, 2/*april tag output parsed to be between 1 and 3*/);
+    calculateRobotNode();
+    calculateRobotAngles();
+    calculateArmPose();
+}
+
+//getters robot pose and position
+
+//setters for initial conditions, aril tag ect
+
+

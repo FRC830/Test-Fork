@@ -2,13 +2,13 @@ class kinematicModel
 {
     public:
 
-    double robotAprilTagX=0;
-    double robotAprilTagY=0;
-    double robotAprilTagZ=0;
-    double robotAprilTagYaw=0;
-    double nodeAprilTagX=0;
-    double nodeAprilTagY=0;
-    double nodeAprilTagZ=0;
+    double robotAprilTagX;
+    double robotAprilTagY;
+    double robotAprilTagZ;
+    double robotAprilTagYaw;
+    double nodeAprilTagX;
+    double nodeAprilTagY;
+    double nodeAprilTagZ;
 
     double robotNodeX;
     double robotNodeY;
@@ -25,7 +25,14 @@ class kinematicModel
     double robotAngleToFaceNode;
     double robotStrafeToNodeAngle;
     double robotStrafeToFaceNodeX;
-    double robotStrafeToFaceNodeY;    
+    double robotStrafeToFaceNodeY;  
+    
+    double nodeDist;
+
+    double armAngleFromHorizon;
+    double armExtend;
 
     void calculateRobotAngles();
+    void calculateArmPose();
+    void calculateKinematics(int rowSelection);
 };
