@@ -150,6 +150,11 @@ namespace pidf
     extern double kArmI;
     extern double kArmD;
     extern double kArmF;
+
+    extern double kTeleP;
+    extern double kTeleI;
+    extern double kTeleD;
+    extern double kTeleF;
 }
 //     constexpr double kDriveThetaP;
 //     constexpr double kDriveThetaF = 0.005;

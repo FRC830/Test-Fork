@@ -3,18 +3,22 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/controller/PIDController.h>
 
-Subsystems::Subsystems() : ArmPIDController (pidf::kArmP, pidf::kArmI, pidf::kArmD) 
+Subsystems::Subsystems() : ArmPIDController (pidf::kArmP, pidf::kArmI, pidf::kArmD), TelePIDController (pidf::kTeleP, pidf::kTeleI, pidf::kTeleD) 
 {
 }
 
 void Subsystems::SubsystemsInit()
 {
-  TelescopeMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   frc::SmartDashboard::PutNumber("ArmPCoefficient", pidf::kArmP);
   frc::SmartDashboard::PutNumber("ArmPAdder", 0);
   frc::SmartDashboard::PutNumber("ArmI", pidf::kArmI);
   frc::SmartDashboard::PutNumber("ArmD", pidf::kArmD);
-  frc::SmartDashboard::PutNumber("Telescope Speed", 0.5);
+  ArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+  frc::SmartDashboard::PutNumber("TeleP", pidf::kTeleP);
+  frc::SmartDashboard::PutNumber("TeleI", pidf::kTeleI);
+  frc::SmartDashboard::PutNumber("TeleD", pidf::kTeleD);
+  teleMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     
 }
 
@@ -23,11 +27,19 @@ void Subsystems::SubsystemsPeriodic()
     ArmMotor.Set(ArmPIDController.Calculate(ArmMotorEncoder.GetPosition()));
     SetArmPIDF
     (
-        cos(ArmMotorEncoder.GetPosition() *(3.14 /180)) *
+        cos(ArmMotorEncoder.GetPosition() *(3.14 /180)) * TeleMotorEncoder.GetPosition() * 
             frc::SmartDashboard::GetNumber("ArmPCoefficient", pidf::kArmP) +
             frc::SmartDashboard::GetNumber("ArmPAdder", 0), 
         frc::SmartDashboard::GetNumber("ArmI", pidf::kArmI), 
         frc::SmartDashboard::GetNumber("ArmD", pidf::kArmD)
+    );
+
+    teleMotor.Set(TelePIDController.Calculate(TeleMotorEncoder.GetPosition()));
+    SetTelePIDF
+    (
+        frc::SmartDashboard::GetNumber("TeleP", pidf::kTeleP), 
+        frc::SmartDashboard::GetNumber("TeleI", pidf::kTeleI), 
+        frc::SmartDashboard::GetNumber("TeleD", pidf::kTeleD)
     );
 }
 
@@ -70,17 +82,24 @@ void Subsystems::SetArmPIDF(double p, double i, double d)
     //ArmPIDController.SetF(f);
 }
 
-void Subsystems::StopTelescope()
+void Subsystems::SetTelePIDF(double p, double i, double d)
 {
-
-    TelescopeMotor.Set(0);
-    frc::SmartDashboard::PutNumber("Telescope Speed", 0.5);
-
+    TelePIDController.SetP(p);
+    TelePIDController.SetI(i);
+    TelePIDController.SetD(d);
+    //ArmPIDController.SetF(f);
 }
 
-void Subsystems::moveTelescopethingy()
+void Subsystems::moveTelescopethingy(bool direction)
 {
-    auto speed = frc::SmartDashboard::GetNumber("Telescope Speed", 0.5);
-    
-    TelescopeMotor.Set(speed);
+    auto setpoint = TelePIDController.GetSetpoint();
+
+    if (setpoint + TeleSpeed * direction < MaxArmAngle && setpoint +TeleSpeed * direction > MinArmAngle)//buffer could be applied here
+    {
+       TelePIDController.SetSetpoint(setpoint +TeleSpeed);
+    }
+    else
+    {
+        std::cout << "Arm out of Bounds" << std::endl;
+    }
 }

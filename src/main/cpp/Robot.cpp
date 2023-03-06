@@ -236,14 +236,14 @@ void Robot::ConfigureButtonBindings() noexcept
                                                                                                   {  m_subsystems.SetGrabberWheels(false); },
                                                                                                   {&m_subsystems}));
 
-  // frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([&]() -> void
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([&]() -> void
                                                                     
-  //                                                                                                 { m_subsystems.RotateArm(false); },
-  //                                                                                                 {&m_subsystems}));
-  // frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kRightBumper).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  { m_subsystems.moveTelescopethingy(false); },
+                                                                                                  {&m_subsystems}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kRightBumper).WhenPressed(frc2::InstantCommand([&]() -> void
                                                                     
-  //                                                                                                 { m_subsystems.RotateArm(true); },
-  //                                                                                                 {&m_subsystems}));
+                                                                                                  { m_subsystems.moveTelescopethingy(true); },
+                                                                                                  {&m_subsystems}));
   
   m_xbox.RightTrigger(0.4, &eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(true);});
 
@@ -254,8 +254,8 @@ void Robot::ConfigureButtonBindings() noexcept
 
   //telescope 
 
-  m_xbox.LeftBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy();});
-  m_xbox.RightBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.StopTelescope();});
+  // m_xbox.LeftBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy(true);});
+  // m_xbox.RightBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy(false);});
 
 
 
