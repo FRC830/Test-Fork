@@ -19,6 +19,12 @@ void Subsystems::SubsystemsInit()
   frc::SmartDashboard::PutNumber("TeleI", pidf::kTeleI);
   frc::SmartDashboard::PutNumber("TeleD", pidf::kTeleD);
   teleMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+  frc::SmartDashboard::PutBoolean("Set this to True if Set Tele PID Target", false);
+  frc::SmartDashboard::PutBoolean("Set this to True if Set Arm PID Target", false);
+
+  frc::SmartDashboard::PutNumber("Arm PID target to Set to for manual setting", 0);
+  frc::SmartDashboard::PutNumber("Tele PID target to Set to for manual setting", 0);
     
 }
 
@@ -27,7 +33,7 @@ void Subsystems::SubsystemsPeriodic()
     ArmMotor.Set(ArmPIDController.Calculate(ArmMotorEncoder.GetPosition()));
     SetArmPIDF
     (
-        cos(ArmMotorEncoder.GetPosition() *(3.14 /180)) * TeleMotorEncoder.GetPosition() * 
+        cos(ArmMotorEncoder.GetPosition()*(3.14 /180)) * TeleMotorEncoder.GetPosition() * 
             frc::SmartDashboard::GetNumber("ArmPCoefficient", pidf::kArmP) +
             frc::SmartDashboard::GetNumber("ArmPAdder", 0), 
         frc::SmartDashboard::GetNumber("ArmI", pidf::kArmI), 
@@ -41,6 +47,26 @@ void Subsystems::SubsystemsPeriodic()
         frc::SmartDashboard::GetNumber("TeleI", pidf::kTeleI), 
         frc::SmartDashboard::GetNumber("TeleD", pidf::kTeleD)
     );
+
+    bool settingArm = frc::SmartDashboard::GetBoolean("Set this to True if Set Arm PID Target", false);
+    bool settingTele = frc::SmartDashboard::GetBoolean("Set this to True if Set Tele PID Target", false);
+
+    if (settingArm)
+    {
+        SetArmPIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", ArmMotorEncoder.GetPosition())); 
+    }
+    if (settingTele)
+    {
+        SetTelePIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", TeleMotorEncoder.GetPosition()));
+    }
+
+    frc::SmartDashboard::PutBoolean("Set this to True if Set Tele PID Target", false);
+    frc::SmartDashboard::PutBoolean("Set this to True if Set Arm PID Target", false);
+
+    frc::SmartDashboard::PutNumber("Arm Position", ArmMotorEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("Tele Position", TeleMotorEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("Arm PID Target", ArmPIDController.GetSetpoint());
+    frc::SmartDashboard::PutNumber("Tele PID Target", TelePIDController.GetSetpoint());
 }
 
 void Subsystems::SetGrabberWheels(bool direction)
@@ -61,19 +87,6 @@ void Subsystems::ToggleGrabberPnumatics()
     GrabberOnOff = !GrabberOnOff;
 
 }
-void Subsystems::RotateArm(bool direction)
-{
-    auto setpoint = ArmPIDController.GetSetpoint();
-
-    if (setpoint + ArmSpeed * direction < MaxArmAngle && setpoint + ArmSpeed * direction > MinArmAngle)//buffer could be applied here
-    {
-        ArmPIDController.SetSetpoint(setpoint + ArmSpeed);
-    }
-    else
-    {
-        std::cout << "Arm out of Bounds" << std::endl;
-    }
-}
 void Subsystems::SetArmPIDF(double p, double i, double d)
 {
     ArmPIDController.SetP(p);
@@ -88,6 +101,20 @@ void Subsystems::SetTelePIDF(double p, double i, double d)
     TelePIDController.SetI(i);
     TelePIDController.SetD(d);
     //ArmPIDController.SetF(f);
+}
+
+void Subsystems::RotateArm(bool direction)
+{
+    auto setpoint = ArmPIDController.GetSetpoint();
+
+    if (setpoint + ArmSpeed * direction < MaxArmAngle && setpoint + ArmSpeed * direction > MinArmAngle)//buffer could be applied here
+    {
+        ArmPIDController.SetSetpoint(setpoint + ArmSpeed);
+    }
+    else
+    {
+        std::cout << "Arm out of Bounds" << std::endl;
+    }
 }
 
 void Subsystems::moveTelescopethingy(bool direction)
@@ -110,6 +137,10 @@ void Subsystems::SetArmPIDTarget(int target)
     {
         ArmPIDController.SetSetpoint(target);
     }
+    else
+    {
+        std::cout << "Arm out of Bounds" << std::endl;
+    }
 }
 
 void Subsystems::SetTelePIDTarget(int target)
@@ -117,5 +148,9 @@ void Subsystems::SetTelePIDTarget(int target)
     if (target < MaxTeleAngle && target > MinTeleAngle)
     {
         TelePIDController.SetSetpoint(target);
+    }
+    else
+    {
+        std::cout << "Tele out of Bounds" << std::endl;
     }
 }

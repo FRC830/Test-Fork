@@ -21,7 +21,9 @@ class Subsystems : public frc2::SubsystemBase
         void StopTelescope();
         
         void SetArmPIDF (double p, double i, double d);
+        void SetArmPIDTarget (int target);
         void SetTelePIDF (double p, double i, double d);
+        void SetTelePIDTarget (int target);
 
         void SubsystemsInit ();
         void SubsystemsPeriodic ();
