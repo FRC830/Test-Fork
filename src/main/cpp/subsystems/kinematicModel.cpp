@@ -12,11 +12,13 @@ void kinematicModel::calculateRobotNode() {
     
 void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum) {
 
-    double table[9]={22.125,0,-21.875,-43.875,-65.875,-87.875,-109.875,-131.875,-153.875};
+    double columnXtable[9]={22.125,0,-21.875,-43.875,-65.875,-87.875,-109.875,-131.875,-153.875};
+    double rowYtable[3]={7.14,8.42,25.45};
+    double rowZtable[3]={-18.16,7.84,27.65};
     double distances[9]={0,0,0,0,0,0,0,0,0};
 
     for(int i=0;i<=8;i++){
-        double distance = abs(robotAprilTagX - table[i]);
+        double distance = abs(robotAprilTagX - (columnXtable[i] + 66*(3-aprilTagNum)));
         distances[i] = distance;
     }
 
@@ -28,6 +30,10 @@ void kinematicModel::getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum) 
             shortestColumn = i;
         }
     }
+    
+    nodeAprilTagX=(columnXtable[shortestColumn] + 66*(3-aprilTagNum));
+    nodeAprilTagY=rowYtable[nodeRow];
+    nodeAprilTagZ=rowZtable[nodeRow];
 
 };
 
