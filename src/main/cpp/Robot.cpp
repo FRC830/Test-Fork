@@ -20,6 +20,7 @@
 #include <frc2/command/RunCommand.h>
 #include <frc/Preferences.h>
 
+
 #include <cmath>
 #include <cstdio>
 #include <string>
@@ -63,6 +64,7 @@ void Robot::RobotInit() noexcept
   // Set up default drive command; non-owning pointer is passed by value.
   auto driveRequirements = {dynamic_cast<frc2::Subsystem *>(&m_driveSubsystem)};
 
+
   // Drive, as commanded by operator joystick controls.
   m_driveCommand = std::make_unique<frc2::RunCommand>(
       [&]() -> void
@@ -83,6 +85,8 @@ void Robot::RobotInit() noexcept
             std::get<1>(controls) * physical::kMaxDriveSpeed,
             std::get<2>(controls) * physical::kMaxTurnRate,
             std::get<3>(controls));
+
+
       },
       driveRequirements);
   // autonCommand = std::make_unique<frc2::RunCommand>(
@@ -99,6 +103,7 @@ void Robot::RobotInit() noexcept
   //autonChooser.addOption("taxi", 0);
 
   
+
 }
 
 /**
@@ -137,7 +142,6 @@ void Robot::RobotPeriodic() noexcept
   
   if (frc::SmartDashboard::GetNumber("0 if realign", 1) == 0)
   {
-    // Read from the preferences and set the alignment offests to those values
     physical::kFrontLeftAlignmentOffset += -int(m_driveSubsystem.m_frontLeftSwerveModule->GetTurningPosition());
     physical::kFrontRightAlignmentOffset += -int(m_driveSubsystem.m_frontRightSwerveModule->GetTurningPosition());
     physical::kRearLeftAlignmentOffset += -int(m_driveSubsystem.m_rearLeftSwerveModule->GetTurningPosition());
