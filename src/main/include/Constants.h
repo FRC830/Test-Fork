@@ -88,10 +88,14 @@ namespace physical
     constexpr int kFrontLeftDriveMotorCanID = 6;
     constexpr int kFrontRightTurningMotorCanID = 1;
     constexpr int kFrontRightDriveMotorCanID = 5;
-    constexpr int kRearLeftTurningMotorCanID = 3;
-    constexpr int kRearLeftDriveMotorCanID = 7;
-    constexpr int kRearRightTurningMotorCanID = 4;
-    constexpr int kRearRightDriveMotorCanID = 8;
+
+    constexpr int kRearLeftTurningMotorCanID = 4;
+    constexpr int kRearLeftDriveMotorCanID = 8;
+    
+    constexpr int kRearRightTurningMotorCanID = 3;
+    constexpr int kRearRightDriveMotorCanID = 7;
+
+
     constexpr int kFrontLeftTurningEncoderPort = 1;
     constexpr int kFrontRightTurningEncoderPort = 0;
     constexpr int kRearLeftTurningEncoderPort = 2;
