@@ -99,7 +99,7 @@ void Robot::RobotInit() noexcept
 
   // Point swerve modules, but do not actually drive.
 
-  autonChooser.AddOption("taxi", 0);
+  autonChooser.AddOption("taxi", 0); 
   //autonChooser.addOption("taxi", 0);
 
   
@@ -179,7 +179,8 @@ void Robot::AutonomousInit() noexcept
 
 void Robot::AutonomousPeriodic() noexcept {
 
-  m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
+  m_auton.runAuton(0, &m_driveSubsystem);
+  //m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
   
 }
   // Scheduler::GetInstance()->Run();
