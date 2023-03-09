@@ -175,11 +175,15 @@ void Robot::DisabledPeriodic() noexcept {}
  */
 void Robot::AutonomousInit() noexcept
 {
+  
+  m_driveSubsystem.SetDefaultCommand(*m_driveCommand);
 }
 
 void Robot::AutonomousPeriodic() noexcept {
 
-  m_auton.runAuton(0, &m_driveSubsystem);
+  m_driveSubsystem.Drive(-0.55_mps, 0_mps, 0_deg_per_s, false);
+
+  //m_auton.runAuton(0);
   //m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
   
 }
@@ -187,8 +191,6 @@ void Robot::AutonomousPeriodic() noexcept {
 void Robot::AutonomousExit() noexcept {}
 
 void Robot::TeleopInit() noexcept {
-
-  frc::SmartDashboard::PutNumber("Death", 500);
 
   m_driveSubsystem.ClearFaults();
 

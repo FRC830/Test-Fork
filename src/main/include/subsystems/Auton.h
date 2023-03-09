@@ -2,10 +2,14 @@
 
 class Auton 
 {
+
+
     public: 
-        void runAuton(int mode, DriveSubsystem* m_drive);
+        void runAuton(int mode);
 
     private:
-        void taxi (DriveSubsystem* m_drive);
+        DriveSubsystem *m_drive; 
+        void taxi ();
+        int jimboGeeO = 12;
 
 };
