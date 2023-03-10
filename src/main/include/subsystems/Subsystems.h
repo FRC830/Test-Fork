@@ -2,6 +2,7 @@
 #include <frc/controller/PIDController.h>
 #include <rev/CANSparkMax.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/Encoder.h>
 #include "../Constants.h"
 
 
@@ -54,8 +55,8 @@ class Subsystems : public frc2::SubsystemBase
         rev::CANSparkMax GrabberWheelsMotor =  rev::CANSparkMax(10, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
 
         rev::CANSparkMax ArmMotor = rev::CANSparkMax(11, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-        rev::SparkMaxRelativeEncoder ArmMotorEncoder = ArmMotor.GetEncoder();
+        frc::Encoder ArmMotorEncoder {0, 1};
 
         rev::CANSparkMax teleMotor = rev::CANSparkMax(12, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-        rev::SparkMaxRelativeEncoder TeleMotorEncoder = teleMotor.GetEncoder();
+        frc::Encoder TeleMotorEncoder = {2, 3};
 };

@@ -30,17 +30,17 @@ void Subsystems::SubsystemsInit()
 
 void Subsystems::SubsystemsPeriodic()
 {
-    ArmMotor.Set(ArmPIDController.Calculate(ArmMotorEncoder.GetPosition()));
+    ArmMotor.Set(ArmPIDController.Calculate(ArmMotorEncoder.Get()));
     SetArmPIDF
     (
-        cos(ArmMotorEncoder.GetPosition()*(3.14 /180)) * TeleMotorEncoder.GetPosition() * 
+        cos(ArmMotorEncoder.Get()*(3.14 /180)) * TeleMotorEncoder.Get() * 
             frc::SmartDashboard::GetNumber("ArmPCoefficient", pidf::kArmP) +
             frc::SmartDashboard::GetNumber("ArmPAdder", 0), 
         frc::SmartDashboard::GetNumber("ArmI", pidf::kArmI), 
         frc::SmartDashboard::GetNumber("ArmD", pidf::kArmD)
     );
 
-    teleMotor.Set(TelePIDController.Calculate(TeleMotorEncoder.GetPosition()));
+    teleMotor.Set(TelePIDController.Calculate(TeleMotorEncoder.Get()));
     SetTelePIDF
     (
         frc::SmartDashboard::GetNumber("TeleP", pidf::kTeleP), 
@@ -53,18 +53,18 @@ void Subsystems::SubsystemsPeriodic()
 
     if (settingArm)
     {
-        SetArmPIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", ArmMotorEncoder.GetPosition())); 
+        SetArmPIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", ArmMotorEncoder.Get())); 
     }
     if (settingTele)
     {
-        SetTelePIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", TeleMotorEncoder.GetPosition()));
+        SetTelePIDTarget (frc::SmartDashboard::GetNumber("Arm PID target to Set to for manual setting", TeleMotorEncoder.Get()));
     }
 
     frc::SmartDashboard::PutBoolean("Set this to True if Set Tele PID Target", false);
     frc::SmartDashboard::PutBoolean("Set this to True if Set Arm PID Target", false);
 
-    frc::SmartDashboard::PutNumber("Arm Position", ArmMotorEncoder.GetPosition());
-    frc::SmartDashboard::PutNumber("Tele Position", TeleMotorEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("Arm Position", ArmMotorEncoder.Get());
+    frc::SmartDashboard::PutNumber("Tele Position", TeleMotorEncoder.Get());
     frc::SmartDashboard::PutNumber("Arm PID Target", ArmPIDController.GetSetpoint());
     frc::SmartDashboard::PutNumber("Tele PID Target", TelePIDController.GetSetpoint());
 }
