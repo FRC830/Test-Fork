@@ -5,11 +5,11 @@ class Auton
 
 
     public: 
-        void runAuton(int mode);
+        void runAuton (int mode, auto m_drive, int counter);
 
     private:
-        DriveSubsystem *m_drive; 
-        void taxi ();
-        int jimboGeeO = 12;
+        void taxi(DriveSubsystem m_drive, int counter);
+        void DockingRight(auto m_drive, int counter);
+        
 
 };
