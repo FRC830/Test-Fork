@@ -10,10 +10,14 @@
 #include <frc/GenericHID.h>
 #include <frc/XboxController.h>
 #include <frc2/command/RunCommand.h>
+#include <frc/event/BooleanEvent.h>
+
 #include <frc/AnalogEncoder.h>
 
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/Auton.h"
+
+#include "subsystems/Subsystems.h"
 
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -54,6 +58,7 @@ private:
 
   // The robot's subsystems and commands are defined here...
   DriveSubsystem m_driveSubsystem;
+  Subsystems m_subsystems;
 
   Auton m_auton;
 
@@ -61,6 +66,8 @@ private:
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
   
   frc::XboxController m_xbox{0};
+  frc::XboxController m_Copilot{1};
+  frc::EventLoop eventLoop;
   frc::GenericHID m_buttonBoard{1};
 
   frc::SendableChooser<int> autonChooser;

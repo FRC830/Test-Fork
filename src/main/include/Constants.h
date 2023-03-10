@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-
 #include <units/angle.h>
 #include <units/angular_acceleration.h>
 #include <units/angular_velocity.h>
@@ -150,8 +149,18 @@ namespace pidf
     constexpr double kDriveThetaF = 0.005;
     constexpr double kDriveThetaI = 0.00;
     constexpr double kDriveThetaD = 0.0;
+
+    extern double kArmP;
+    extern double kArmI;
+    extern double kArmD;
+    extern double kArmF;
+
+    extern double kTeleP;
+    extern double kTeleI;
+    extern double kTeleD;
+    extern double kTeleF;
 }
-//     constexpr double kDriveThetaP = 0.30;
+//     constexpr double kDriveThetaP;
 //     constexpr double kDriveThetaF = 0.005;
 //     constexpr double kDriveThetaI = 0.0025;
 //     constexpr double kDriveThetaD = 0.0;

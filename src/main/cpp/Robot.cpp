@@ -9,6 +9,7 @@
 #include <frc/livewindow/LiveWindow.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/event/EventLoop.h>
 
 #include "Constants.h"
 
@@ -63,6 +64,7 @@ void Robot::RobotInit() noexcept
 
   // Set up default drive command; non-owning pointer is passed by value.
   auto driveRequirements = {dynamic_cast<frc2::Subsystem *>(&m_driveSubsystem)};
+  auto subsystemRequirements = {dynamic_cast<frc2::Subsystem *>(&m_subsystems)};
 
 
   // Drive, as commanded by operator joystick controls.
@@ -86,6 +88,7 @@ void Robot::RobotInit() noexcept
             std::get<2>(controls) * physical::kMaxTurnRate,
             std::get<3>(controls));
 
+        m_subsystems.SetArmPIDF(pidf::kArmP, pidf::kArmI, pidf::kArmD);
 
       },
       driveRequirements);
@@ -103,6 +106,7 @@ void Robot::RobotInit() noexcept
   //autonChooser.addOption("taxi", 0);
 
   
+  m_subsystems.SubsystemsInit();
 
 }
 
@@ -158,6 +162,11 @@ void Robot::RobotPeriodic() noexcept
   // frc::SmartDashboard::PutNumber("Robot Periodic", 1.0);
 
   // DriveSubsystem::shuffAngles();
+
+  eventLoop.Poll();
+
+  m_subsystems.SubsystemsPeriodic();
+  //m_subsystems.SetArmPIDF(frc::SmartDashboard::PutNumber("ArmP", pidf::kArmP), frc::SmartDashboard::PutNumber("ArmI", pidf::kArmI), frc::SmartDashboard::PutNumber("ArmD", pidf::kArmD));
 }
 
 /**
@@ -223,24 +232,55 @@ void Robot::TestExit() noexcept {}
 void Robot::ConfigureButtonBindings() noexcept
 {
   frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                                                  { m_slow = true; },
+                                                                                                  { m_slow = !m_slow; },
                                                                                                   {}));
   frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kB).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                                                  { m_slow = false; },
-                                                                                                  {}));
+                                                                                                  { m_subsystems.ToggleGrabberPnumatics(); },
+                                                                                                  {&m_subsystems}));
 
-  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kX).WhenPressed(frc2::InstantCommand([&]() -> void
-                                                                                                  { m_fieldOriented = false; },
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  { m_driveSubsystem.ZeroHeading(); m_fieldOriented = true; },
                                                                                                   {}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kBack).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                                                  {  m_fieldOriented = false; },
+                                                                                                  {}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kX).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                    
+                                                                                                  { m_subsystems.SetGrabberWheels(true); },
+                                                                                                  {&m_subsystems}));
   frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kY).WhenPressed(frc2::InstantCommand([&]() -> void
                                                                     
-                                                                                                  { m_driveSubsystem.ZeroHeading();
-                                                                                            m_fieldOriented = true; },
-                                                                                                  {&m_driveSubsystem}));
+                                                                                                  {  m_subsystems.SetGrabberWheels(false); },
+                                                                                                  {&m_subsystems}));
 
- 
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                    
+                                                                                                  { m_subsystems.moveTelescopethingy(false); },
+                                                                                                  {&m_subsystems}));
+  frc2::JoystickButton(&m_xbox, frc::XboxController::Button::kRightBumper).WhenPressed(frc2::InstantCommand([&]() -> void
+                                                                    
+                                                                                                  { m_subsystems.moveTelescopethingy(true); },
+                                                                                                  {&m_subsystems}));
+  
+  m_xbox.RightTrigger(0.4, &eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(true);});
 
-}
+  m_xbox.LeftTrigger(0.4, &eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(false);});
+
+  m_xbox.POVUp(&eventLoop).IfHigh([&]() -> void  {m_lock = true;});
+  m_xbox.POVDown(&eventLoop).IfHigh([&]() -> void  {m_lock = false;});
+
+  //telescope 
+
+  // m_xbox.LeftBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy(true);});
+  // m_xbox.RightBumper(&eventLoop).IfHigh([&]() -> void  {m_subsystems.moveTelescopethingy(false);});
+
+
+
+  // m_xbox.POVLeft(&eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(false);});
+  // m_xbox.POVRight(&eventLoop).IfHigh([&]() -> void  {m_subsystems.RotateArm(false);});
+
+
+ }
 
 
 
