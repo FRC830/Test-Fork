@@ -182,9 +182,6 @@ void Robot::AutonomousInit() noexcept
 void Robot::AutonomousPeriodic() noexcept {
 
   m_driveSubsystem.Drive(-0.55_mps, 0_mps, 0_deg_per_s, false);
-
-  //m_auton.runAuton(0);
-  //m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
   
 }
   // Scheduler::GetInstance()->Run();
