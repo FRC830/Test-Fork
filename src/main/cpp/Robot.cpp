@@ -89,6 +89,19 @@ void Robot::RobotInit() noexcept
 
       },
       driveRequirements);
+  // autonCommand = std::make_unique<frc2::RunCommand>(
+  //     [&]() -> void
+  //     {
+  //     wpi::array<frc::SwerveModuleState, 4> states = kDriveKinematics.ToSwerveModuleStates();
+  //     frc::ChassisSpeeds::FromFieldRelativeSpeeds(0, 0.1, 0, botRot),
+  //     },
+  //     driveRequirements);
+
+  // Point swerve modules, but do not actually drive.
+
+  autonChooser.AddOption("taxi", 0); 
+  //autonChooser.addOption("taxi", 0);
+
   
 
 }
@@ -162,18 +175,22 @@ void Robot::DisabledPeriodic() noexcept {}
  */
 void Robot::AutonomousInit() noexcept
 {
-  // if(autonomousCommand != NULL) autonomousCOmmand->Start();
-
-
+  
+  m_driveSubsystem.SetDefaultCommand(*m_driveCommand);
 }
 
-void Robot::AutonomousPeriodic() noexcept {}
+void Robot::AutonomousPeriodic() noexcept {
+
+  m_driveSubsystem.Drive(-0.55_mps, 0_mps, 0_deg_per_s, false);
+
+  //m_auton.runAuton(0);
+  //m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
+  
+}
   // Scheduler::GetInstance()->Run();
 void Robot::AutonomousExit() noexcept {}
 
 void Robot::TeleopInit() noexcept {
-
-  frc::SmartDashboard::PutNumber("Death", 500);
 
   m_driveSubsystem.ClearFaults();
 

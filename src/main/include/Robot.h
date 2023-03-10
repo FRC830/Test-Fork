@@ -13,6 +13,9 @@
 #include <frc/AnalogEncoder.h>
 
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/Auton.h"
+
+#include <frc/smartdashboard/SendableChooser.h>
 
 
 #include <memory>
@@ -52,9 +55,13 @@ private:
   // The robot's subsystems and commands are defined here...
   DriveSubsystem m_driveSubsystem;
 
+  Auton m_auton;
+
   std::unique_ptr<frc2::RunCommand> m_driveCommand;
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
   
   frc::XboxController m_xbox{0};
   frc::GenericHID m_buttonBoard{1};
+
+  frc::SendableChooser<int> autonChooser;
 };
