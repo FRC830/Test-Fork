@@ -11,6 +11,8 @@ class Auton
         void taxi(DriveSubsystem m_drive, int counter);
         void taxiWithLowScore(DriveSubsystem m_drive, int counter);
         void DockingRight(auto m_drive, int counter);
+        void DockingLeft(auto m_drive, int counter);
+
         
 
 };

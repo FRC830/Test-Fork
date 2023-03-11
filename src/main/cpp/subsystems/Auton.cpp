@@ -52,11 +52,11 @@ void Auton::DockingRight(auto m_driveSubsystem, int counter) {
         
     } else if (counter < 325) {
 
-        m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
+        m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
 
     } else if (counter < 375) {
 
-        m_driveSubsystem.Drive(1_mps, 0_mps, -90_deg_per_s, false);
+        m_driveSubsystem.Drive(1_mps, 0_mps, 0_deg_per_s, false);
 
     } else if (counter < 425) {
 
@@ -67,6 +67,29 @@ void Auton::DockingRight(auto m_driveSubsystem, int counter) {
         m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
 
     }
+}
 
+void Auton::DockingLeft(auto m_driveSubsystem, int counter) {
+    if (counter < 275)
+    {
+        m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
+        
+    } else if (counter < 325) {
+
+        m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
+
+    } else if (counter < 375) {
+
+        m_driveSubsystem.Drive(1_mps, 0_mps, 0_deg_per_s, false);
+
+    } else if (counter < 425) {
+
+        m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
+
+    } else if (counter < 475) {
+
+        m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
+
+    }
 }
 
