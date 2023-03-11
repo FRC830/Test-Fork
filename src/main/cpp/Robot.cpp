@@ -120,6 +120,17 @@ void Robot::RobotInit() noexcept
 // This performs the sense portion of sense/think/act, including sending test
 // mode telemetry.  It also handles think and act, except in test mode.  In the
 // latter case, TestPeriodic() handles manually driven act.
+
+void Robot::GetDashBoardValues() {
+
+  c1 = frc::SmartDashboard::PutNumber("Counter Limit 1", c1);
+  c2 = frc::SmartDashboard::PutNumber("Counter Limit 2", c2);
+  c3 = frc::SmartDashboard::PutNumber("Counter Limit 3", c3);
+  c4 = frc::SmartDashboard::PutNumber("Counter Limit 4", c4);
+  c5 = frc::SmartDashboard::PutNumber("Counter Limit 5", c5);
+
+}
+
 void Robot::RobotPeriodic() noexcept
 {
   
@@ -140,6 +151,12 @@ void Robot::RobotPeriodic() noexcept
   frc::SmartDashboard::PutNumber("Front Right Target PID", double(m_driveSubsystem.m_frontRightSwerveModule->m_rioPIDController->GetSetpoint().position));
   frc::SmartDashboard::PutNumber("Back Left Target PID", double(m_driveSubsystem.m_rearLeftSwerveModule->m_rioPIDController->GetSetpoint().position));
   frc::SmartDashboard::PutNumber("Back Right Target PID", double(m_driveSubsystem.m_rearRightSwerveModule->m_rioPIDController->GetSetpoint().position));
+  
+  frc::SmartDashboard::PutNumber("Counter Limit 1", c1);
+  frc::SmartDashboard::PutNumber("Counter Limit 2", c2);
+  frc::SmartDashboard::PutNumber("Counter Limit 3", c3);
+  frc::SmartDashboard::PutNumber("Counter Limit 4", c4);
+  frc::SmartDashboard::PutNumber("Counter Limit 5", c5);
 
   m_driveSubsystem.OutputWheelPositions();
   
@@ -189,32 +206,32 @@ void Robot::AutonomousInit() noexcept
 
 void Robot::AutonomousPeriodic() noexcept {
   
- 
-  if (counter < 275)
+  GetDashBoardValues();
+  
+  if (counter < c1)
   {
-    m_driveSubsystem.Drive(4_mps, 0_mps, 90_deg_per_s, false);
+    m_driveSubsystem.Drive(4_mps, 0_mps, 0_deg_per_s, false);
     
-  } else if (counter < 325) {
+  } else if (counter < c2) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, 0_deg_per_s, false);
+    m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
 
-  } else if (counter < 375) {
+  } else if (counter < c3) {
 
-    m_driveSubsystem.Drive(1_mps, 0_mps, 0_deg_per_s, false);
+    m_driveSubsystem.Drive(2_mps, 0_mps, 0_deg_per_s, false);
 
-  } else if (counter < 425) {
+  } else if (counter < c4) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
+    m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
 
-  } else if (counter < 475) {
+  } else if (counter < c5) {
 
     m_driveSubsystem.Drive(3_mps, 0_mps, 0_deg_per_s, false);
 
   }
   
-  //m_auton.runAuton(0);
-  //m_auton.runAuton(autonChooser.GetSelected(), &m_driveSubsystem);
- counter += 1; 
+  //m_auton.runAuton(1, m_driveSubsystem, counter);
+  counter += 1; 
 }
   // Scheduler::GetInstance()->Run();
 void Robot::AutonomousExit() noexcept {

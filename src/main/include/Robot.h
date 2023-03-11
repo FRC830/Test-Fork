@@ -43,6 +43,8 @@ public:
   void TestPeriodic() noexcept override;
   void TestExit() noexcept override;
 
+  void GetDashBoardValues();
+
 private:
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
@@ -63,6 +65,12 @@ private:
   Auton m_auton;
 
   int counter = 0;
+  int c1 = 275;
+  int c2 = 325;
+  int c3 = 375;
+  int c4 = 425;
+  int c5 = 475;
+
 
   std::unique_ptr<frc2::RunCommand> m_driveCommand;
   std::unique_ptr<frc2::RunCommand> m_pointCommand;
