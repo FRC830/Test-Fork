@@ -31,10 +31,24 @@ void Auton::taxi(DriveSubsystem m_drive, int counter)
     }
 }
 
+void Auton::taxiWithLowScore(DriveSubsystem m_drive, int counter) {
+
+    if(counter < 25) {
+
+        m_drive.Drive(6_mps, 0_mps, 0_deg_per_s, false);
+
+    } if (counter < 300) {
+
+        m_drive.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
+
+    }
+
+}
+
 void Auton::DockingRight(auto m_driveSubsystem, int counter) {
     if (counter < 275)
     {
-        m_driveSubsystem.Drive(0.5_mps, 0_mps, 0_deg_per_s, false);
+        m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
         
     } else if (counter < 325) {
 
