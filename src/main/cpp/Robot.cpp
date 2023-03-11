@@ -192,23 +192,23 @@ void Robot::AutonomousPeriodic() noexcept {
  
   if (counter < 275)
   {
-    m_driveSubsystem.Drive(0.5_mps, 0_mps, 0_deg_per_s, false);
+    m_driveSubsystem.Drive(4_mps, 0_mps, 90_deg_per_s, false);
     
   } else if (counter < 325) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
+    m_driveSubsystem.Drive(0_mps, 0_mps, 0_deg_per_s, false);
 
   } else if (counter < 375) {
 
-    m_driveSubsystem.Drive(1_mps, 0_mps, -90_deg_per_s, false);
+    m_driveSubsystem.Drive(1_mps, 0_mps, 0_deg_per_s, false);
 
   } else if (counter < 425) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
+    m_driveSubsystem.Drive(0_mps, 0_mps, 90_deg_per_s, false);
 
   } else if (counter < 475) {
 
-    m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
+    m_driveSubsystem.Drive(3_mps, 0_mps, 0_deg_per_s, false);
 
   }
   
@@ -217,7 +217,10 @@ void Robot::AutonomousPeriodic() noexcept {
  counter += 1; 
 }
   // Scheduler::GetInstance()->Run();
-void Robot::AutonomousExit() noexcept {}
+void Robot::AutonomousExit() noexcept {
+
+  counter = 0; 
+}
 
 void Robot::TeleopInit() noexcept {
 
