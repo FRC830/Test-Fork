@@ -3,7 +3,7 @@
 
 #include "subsystems/DriveSubsystem.h"
 
-void Auton::runAuton (int mode, auto m_drive, int counter)
+void Auton::runAuton (int mode, DriveSubsystem& m_drive, int counter)
 {
     
     std::cout << "run auton" << std::endl;
@@ -17,12 +17,12 @@ void Auton::runAuton (int mode, auto m_drive, int counter)
         DockingRight(m_drive, counter);
     
     default:
-        taxi(m_drive);
+        taxi(m_drive, counter);
         break;
     }
 }
 
-void Auton::taxi(DriveSubsystem m_drive, int counter)
+void Auton::taxi(DriveSubsystem& m_drive, int counter)
 {
   if (counter < 275){
 
@@ -31,13 +31,13 @@ void Auton::taxi(DriveSubsystem m_drive, int counter)
     }
 }
 
-void Auton::taxiWithLowScore(DriveSubsystem m_drive, int counter) {
+void Auton::taxiWithLowScore(DriveSubsystem& m_drive, int counter) {
 
     if(counter < 25) {
 
         m_drive.Drive(6_mps, 0_mps, 0_deg_per_s, false);
 
-    } if (counter < 300) {
+    } else if (counter < 300) {
 
         m_drive.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
 
@@ -45,8 +45,13 @@ void Auton::taxiWithLowScore(DriveSubsystem m_drive, int counter) {
 
 }
 
-void Auton::DockingRight(auto m_driveSubsystem, int counter) {
-    if (counter < 275)
+void Auton::DockingRight(DriveSubsystem& m_driveSubsystem, int counter) {
+    
+    if(counter < 25) {
+
+        m_driveSubsystem.Drive(6_mps, 0_mps, 0_deg_per_s, false);
+
+    } else if (counter < 275)
     {
         m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);
         
@@ -69,7 +74,7 @@ void Auton::DockingRight(auto m_driveSubsystem, int counter) {
     }
 }
 
-void Auton::DockingLeft(auto m_driveSubsystem, int counter) {
+void Auton::DockingLeft(DriveSubsystem& m_driveSubsystem, int counter) {
     if (counter < 275)
     {
         m_driveSubsystem.Drive(1.5_mps, 0_mps, 0_deg_per_s, false);

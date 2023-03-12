@@ -44,6 +44,7 @@ public:
   void TestExit() noexcept override;
 
   void GetDashBoardValues();
+  void PutDashBoardValues();
 
 private:
   // Have it null by default so that if testing teleop it

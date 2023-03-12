@@ -131,12 +131,8 @@ void Robot::GetDashBoardValues() {
 
 }
 
-void Robot::RobotPeriodic() noexcept
-{
-  
-  frc2::CommandScheduler::GetInstance().Run();
+void Robot::PutDashBoardValues(){
 
-  
   frc::SmartDashboard::PutNumber("Front Left Turning Position", double(m_driveSubsystem.m_frontLeftSwerveModule->GetTurningPosition()));
   frc::SmartDashboard::PutNumber("Front Right Turning Position", double(m_driveSubsystem.m_frontRightSwerveModule->GetTurningPosition()));
   frc::SmartDashboard::PutNumber("Back Left Turning Position", double(m_driveSubsystem.m_rearLeftSwerveModule->GetTurningPosition()));
@@ -157,6 +153,17 @@ void Robot::RobotPeriodic() noexcept
   frc::SmartDashboard::PutNumber("Counter Limit 3", c3);
   frc::SmartDashboard::PutNumber("Counter Limit 4", c4);
   frc::SmartDashboard::PutNumber("Counter Limit 5", c5);
+  
+}
+
+void Robot::RobotPeriodic() noexcept
+{
+  
+  frc2::CommandScheduler::GetInstance().Run();
+
+  GetDashBoardValues();
+  PutDashBoardValues();  
+
 
   m_driveSubsystem.OutputWheelPositions();
   
@@ -201,6 +208,8 @@ void Robot::DisabledPeriodic() noexcept {}
 void Robot::AutonomousInit() noexcept
 {
   
+  counter = 0;
+
   //m_driveSubsystem.SetDefaultCommand(*m_driveCommand);
 }
 
@@ -208,28 +217,35 @@ void Robot::AutonomousPeriodic() noexcept {
   
   GetDashBoardValues();
   
-  if (counter < c1)
-  {
-    m_driveSubsystem.Drive(4_mps, 0_mps, 0_deg_per_s, false);
+  // if(counter < 25) {
+
+  //       m_driveSubsystem.Drive(6_mps, 0_mps, 0_deg_per_s, false);
+
+  // } else if (counter < c1)
+  // {
+  //   m_driveSubsystem.Drive(4_mps, 0_mps, 0_deg_per_s, false);
     
-  } else if (counter < c2) {
+  // } else if (counter < c2) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
+  //   m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
 
-  } else if (counter < c3) {
+  // } else if (counter < c3) {
 
-    m_driveSubsystem.Drive(2_mps, 0_mps, 0_deg_per_s, false);
+  //   m_driveSubsystem.Drive(2_mps, 0_mps, 0_deg_per_s, false);
 
-  } else if (counter < c4) {
+  // } else if (counter < c4) {
 
-    m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
+  //   m_driveSubsystem.Drive(0_mps, 0_mps, -90_deg_per_s, false);
 
-  } else if (counter < c5) {
+  // } else if (counter < c5) {
 
-    m_driveSubsystem.Drive(3_mps, 0_mps, 0_deg_per_s, false);
+  //   m_driveSubsystem.Drive(3_mps, 0_mps, 0_deg_per_s, false);
 
-  }
+  // }
   
+
+  m_auton.runAuton(1, m_driveSubsystem, counter);
+
   //m_auton.runAuton(1, m_driveSubsystem, counter);
   counter += 1; 
 }
