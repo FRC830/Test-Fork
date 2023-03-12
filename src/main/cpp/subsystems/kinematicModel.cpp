@@ -4,6 +4,13 @@
 // #include <cmath>
 
 // calculates the position of a node based on the XYZ given by the april tags
+
+void kinematicModel::setNumbers(){
+
+    
+
+}
+
 void kinematicModel::calculateRobotNode() {
     robotNodeX = robotAprilTagX - nodeAprilTagX;
     robotNodeY = robotAprilTagY - nodeAprilTagY;

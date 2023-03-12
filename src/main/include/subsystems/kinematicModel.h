@@ -6,6 +6,7 @@ class kinematicModel
     double robotAprilTagY;
     double robotAprilTagZ;
     double robotAprilTagYaw;
+    
     double nodeAprilTagX;
     double nodeAprilTagY;
     double nodeAprilTagZ;
@@ -15,6 +16,8 @@ class kinematicModel
     double robotNodeZ;
 
     int aprilTagNum;
+
+    void setNumbers();
     
     void calculateRobotNode();
     void getAprilTagPosOfSelectedNode(int nodeRow, int aprilTagNum);
