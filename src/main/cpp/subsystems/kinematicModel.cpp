@@ -1,15 +1,20 @@
 #include <Subsystems/kinematicModel.h>
 #include <cstdlib> //for abs value function
-#include <math.h>
-// #include <cmath>
+// #include <math.h>
+#include <cmath>
+
+void kinematicModel::setNumbers(double x, double y, double z, double yaw){
+
+    robotAprilTagX = x;
+    robotAprilTagY = y;
+    robotAprilTagZ = z;
+    robotAprilTagYaw = yaw;
+
+}
+
 
 // calculates the position of a node based on the XYZ given by the april tags
 
-void kinematicModel::setNumbers(){
-
-    
-
-}
 
 void kinematicModel::calculateRobotNode() {
     robotNodeX = robotAprilTagX - nodeAprilTagX;
@@ -74,13 +79,13 @@ void kinematicModel::calculateArmPose(){
 };
 
 void kinematicModel::calculateKinematics(int rowSelection){
-    double robotAprilTagX=0;
-    double robotAprilTagY=0;
-    double robotAprilTagZ=0;
-    double robotAprilTagYaw=0;
-    double nodeAprilTagX=0;
-    double nodeAprilTagY=0;
-    double nodeAprilTagZ=0;
+    robotAprilTagX=0;
+    robotAprilTagY=0;
+    robotAprilTagZ=0;
+    robotAprilTagYaw=0;
+    nodeAprilTagX=0;
+    nodeAprilTagY=0;
+    nodeAprilTagZ=0;
 
     //parse april tag
     //get robot pivot location

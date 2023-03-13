@@ -38,4 +38,7 @@ class kinematicModel
     void calculateRobotAngles();
     void calculateArmPose();
     void calculateKinematics(int rowSelection);
+    void setNumbers(double x, double y, double z, double yaw);
+
+
 };

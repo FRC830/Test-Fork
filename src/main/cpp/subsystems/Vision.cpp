@@ -1,5 +1,4 @@
 #include <subsystems/Vision.h>
-#include <photonlib>
 
 Vision::Vision(){
         camera.SetPipelineIndex(0);
@@ -23,9 +22,9 @@ void Vision::updatePipeline(){
     cube = camera.GetLatestResult();
 }
 
-List<photonlib::PhotonTrackedTarget> Vision:getListOfTags(){
+auto Vision::getListOfTags(){
 
-    return tag.getTargets();
+    return tag.GetTargets();
 
 }
 

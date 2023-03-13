@@ -1,11 +1,16 @@
-#include <photonlib>
 
+#include <photonlib/PhotonCamera.h>
+
+
+using namespace photonlib;
 class Vision
 {
 private:
     /* data */
     
 public:
+
+
     Vision();
 
     photonlib::PhotonCamera camera{"photonvision"};
@@ -15,5 +20,5 @@ public:
     void updatePipeline();
     photonlib::PhotonPipelineResult getVisionOutput(std::string name);
     photonlib::PhotonPipelineResult getPipeline(int num);
-    List<photonlib::PhotonTrackedTarget> getListOfTags();
+    auto getListOfTags();
 };
