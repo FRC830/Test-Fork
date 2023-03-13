@@ -1,6 +1,7 @@
-
 #include <photonlib/PhotonCamera.h>
-
+#include <photonlib/PhotonTrackedTarget.h>
+#include <photonlib/PhotonPipelineResult.h>
+#include <list>
 
 using namespace photonlib;
 class Vision
@@ -20,5 +21,5 @@ public:
     void updatePipeline();
     photonlib::PhotonPipelineResult getVisionOutput(std::string name);
     photonlib::PhotonPipelineResult getPipeline(int num);
-    auto getListOfTags();
+    std::span<const photonlib::PhotonTrackedTarget> getListOfTags();
 };
