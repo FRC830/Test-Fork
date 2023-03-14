@@ -8,6 +8,8 @@
 
 #include "Constants.h"
 
+#include <iostream>
+
 #include <AHRS.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/geometry/Translation2d.h>
@@ -42,8 +44,8 @@ class DriveSubsystem : public frc2::SubsystemBase
 public:
   DriveSubsystem() noexcept;
 
-  DriveSubsystem(const DriveSubsystem &) = delete;
-  DriveSubsystem &operator=(const DriveSubsystem &) = delete;
+  //DriveSubsystem(const DriveSubsystem &) = delete;
+  //DriveSubsystem &operator=(const DriveSubsystem &) = delete;
 
   void shuffAngles();
 
@@ -91,6 +93,7 @@ public:
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative) noexcept
   {
+    std::cout << "driving" << std::endl;
     Drive(xSpeed, ySpeed, rot, fieldRelative, 0.0_m, 0.0_m);
   }
 
@@ -236,7 +239,7 @@ private:
   // Test Mode modification of behavior, allows low-level control and
   // modification of drive speed.
   bool m_run{true};
-  double m_limit{1.0};
+  double m_limit{3.5};
   bool m_graph{false};
   double m_testModeTurningVoltage{0.0};
   double m_testModeDriveVoltage{0.0};

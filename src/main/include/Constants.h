@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-
 #include <units/angle.h>
 #include <units/angular_acceleration.h>
 #include <units/angular_velocity.h>
@@ -50,7 +49,7 @@ namespace physical
     // This is an upper bound, for various reasons.  It needs to be empirically
     // measured.  Half of theoretical free speed is a reasonable starting value
     // (since something in the ballpark is needed here in order to to drive).
-    constexpr units::meters_per_second_t kMaxDriveSpeed = 24_fps / 1.25;
+    constexpr units::meters_per_second_t kMaxDriveSpeed = 40_fps;
 
     // For a square drive base, with +/-11.25" x/y coordinates for each of four
     // swerve modules, the radius of the circle going through all modules is:
@@ -88,10 +87,14 @@ namespace physical
     constexpr int kFrontLeftDriveMotorCanID = 6;
     constexpr int kFrontRightTurningMotorCanID = 1;
     constexpr int kFrontRightDriveMotorCanID = 5;
-    constexpr int kRearLeftTurningMotorCanID = 3;
-    constexpr int kRearLeftDriveMotorCanID = 7;
-    constexpr int kRearRightTurningMotorCanID = 4;
-    constexpr int kRearRightDriveMotorCanID = 8;
+
+    constexpr int kRearLeftTurningMotorCanID = 4;
+    constexpr int kRearLeftDriveMotorCanID = 8;
+    
+    constexpr int kRearRightTurningMotorCanID = 3;
+    constexpr int kRearRightDriveMotorCanID = 7;
+
+
     constexpr int kFrontLeftTurningEncoderPort = 1;
     constexpr int kFrontRightTurningEncoderPort = 0;
     constexpr int kRearLeftTurningEncoderPort = 2;
@@ -151,8 +154,13 @@ namespace pidf
     extern double kArmI;
     extern double kArmD;
     extern double kArmF;
+
+    extern double kTeleP;
+    extern double kTeleI;
+    extern double kTeleD;
+    extern double kTeleF;
 }
-//     constexpr double kDriveThetaP = 0.30;
+//     constexpr double kDriveThetaP;
 //     constexpr double kDriveThetaF = 0.005;
 //     constexpr double kDriveThetaI = 0.0025;
 //     constexpr double kDriveThetaD = 0.0;

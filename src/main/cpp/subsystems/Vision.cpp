@@ -1,10 +1,9 @@
 #include <subsystems/Vision.h>
-<<<<<<< HEAD
-=======
+
 #include <photonlib/PhotonCamera.h>
 #include <photonlib/PhotonTrackedTarget.h>
 #include <list>
->>>>>>> 8d2bd1b0fad9ec03207cbf70aca431a255dcc356
+
 
 Vision::Vision(){
         camera.SetPipelineIndex(0);
@@ -28,11 +27,9 @@ void Vision::updatePipeline(){
     cube = camera.GetLatestResult();
 }
 
-<<<<<<< HEAD
 auto Vision::getListOfTags(){
-=======
+
 std::span<const photonlib::PhotonTrackedTarget> Vision::getListOfTags(){
->>>>>>> 8d2bd1b0fad9ec03207cbf70aca431a255dcc356
 
     return tag.GetTargets();
 
@@ -52,5 +49,46 @@ photonlib::PhotonPipelineResult Vision::getPipeline(int num) {
         default: 
             return tag;
     }
+#include <subsystems/Vision.h>
+
+Vision::Vision(){
+    camera.SetPipelineIndex(0);
+    tag = camera.GetLatestResult();
+    camera.SetPipelineIndex(1);
+    tape = camera.GetLatestResult();
+    camera.SetPipelineIndex(2);
+    cone = camera.GetLatestResult();
+    camera.SetPipelineIndex(3);
+    cube = camera.GetLatestResult();
+}
+
+void updatePipeline(){
+    camera.SetPipelineIndex(0);
+    tag = camera.GetLatestResult();
+    camera.SetPipelineIndex(1);
+    tape = camera.GetLatestResult();
+    camera.SetPipelineIndex(2);
+    cone = camera.GetLatestResult();
+    camera.SetPipelineIndex(3);
+    cube = camera.GetLatestResult();
+}
+
+photonlib::PhotonPipelineResult getPipeline(std::string name) {
+
+    switch(name) {
+        case "tag":
+            return tag;
+        case "tape":
+            return tape;
+        case "cube":
+            return cube;
+        case "cone":
+            return cone;
+        default: 
+            return
+    }
+
+}
+
 
 }
